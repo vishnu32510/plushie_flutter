@@ -1,0 +1,53 @@
+name: plushie_yourself
+description: "Turn yourself into an adorable handcrafted plush toy."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.7
+
+  # Image
+  image_picker: ^1.1.2
+
+  # HTTP
+  http: ^1.2.1
+  http_parser: ^4.1.2
+
+  # Env
+  flutter_dotenv: ^5.2.1
+
+  # Firebase Auth
+  firebase_core: ^3.13.1
+  firebase_auth: ^5.5.4
+  google_sign_in: ^6.3.0
+
+  # Sharing / saving
+  share_plus: ^10.1.4
+  path_provider: ^2.1.5
+  gal: ^2.3.0
+
+  # DI
+  get_it: ^8.0.3
+
+  # UI
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
