@@ -6,7 +6,7 @@ import 'package:plushie_yourself/core/config/global_keys.dart';
 import 'package:plushie_yourself/core/config/routes.dart';
 import 'package:plushie_yourself/core/di/injection.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
-import 'package:plushie_yourself/modules/theme/theme.dart';
+import 'package:plushie_yourself/features/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

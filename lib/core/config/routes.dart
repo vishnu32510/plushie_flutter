@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:plushie_yourself/features/authentication/screens/login_screen.dart';
 import 'package:plushie_yourself/features/plushie/screens/home_screen.dart';
 import 'package:plushie_yourself/features/plushie/screens/result_screen.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String result = '/result';
+  static const String login = '/login';
 }
 
 class CustomRouter {
@@ -21,6 +23,8 @@ class CustomRouter {
             resultBytes: args?['resultBytes'],
           ),
         );
+      case AppRoutes.login:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

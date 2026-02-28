@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plushie_yourself/core/config/routes.dart';
-import 'package:plushie_yourself/core/services/auth_service.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
-import 'package:plushie_yourself/features/auth/screens/login_bottom_sheet.dart';
+import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
-import 'package:plushie_yourself/modules/theme/app_colors.dart';
+import 'package:plushie_yourself/features/theme/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -95,21 +94,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _transform() {
+  bool get _isLoggedIn {
+    final authState = context.read<AuthenticationBloc>().state;
+    return authState.status == AuthenticationStatus.authenticated;
+  }
+
+  Future<void> _transform() async {
     if (_selectedImage == null) {
       _showImageSourceSheet();
       return;
     }
-    if (!kDebugMode && !AuthService.isLoggedIn) {
-      LoginBottomSheet.show(
-        context,
-        onSuccess: () => context
-            .read<PlushieBloc>()
-            .add(TransformImageEvent(_selectedImage!)),
-      );
-      return;
+    if (!kDebugMode && !_isLoggedIn) {
+      await Navigator.pushNamed(context, AppRoutes.login);
+      if (!mounted || !_isLoggedIn) return;
     }
-    context.read<PlushieBloc>().add(TransformImageEvent(_selectedImage!));
+    if (mounted) {
+      context.read<PlushieBloc>().add(TransformImageEvent(_selectedImage!));
+    }
   }
 
   @override

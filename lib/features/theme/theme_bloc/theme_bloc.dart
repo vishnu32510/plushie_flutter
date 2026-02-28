@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:plushie_yourself/modules/theme/app_colors.dart';
+import 'package:plushie_yourself/features/theme/app_colors.dart';
 import '../theme_enums.dart';
 
 part 'theme_event.dart';

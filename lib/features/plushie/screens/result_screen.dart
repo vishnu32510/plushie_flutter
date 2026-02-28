@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plushie_yourself/core/services/media_service.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
-import 'package:plushie_yourself/modules/theme/app_colors.dart';
+import 'package:plushie_yourself/features/theme/app_colors.dart';
 
 class ResultScreen extends StatefulWidget {
   final Uint8List? imageBytes;
