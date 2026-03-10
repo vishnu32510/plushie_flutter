@@ -8,8 +8,10 @@ import 'package:share_plus/share_plus.dart';
 class MediaService extends Services {
   /// Saves [bytes] as a PNG to the device gallery.
   /// Returns an error message on failure, null on success.
-  static Future<String?> saveToGallery(Uint8List bytes,
-      {String prefix = 'plushie'}) async {
+  static Future<String?> saveToGallery(
+    Uint8List bytes, {
+    String prefix = 'plushie',
+  }) async {
     try {
       final name = '${prefix}_${DateTime.now().millisecondsSinceEpoch}';
       await Gal.putImageBytes(bytes, name: name);
@@ -24,13 +26,11 @@ class MediaService extends Services {
   static Future<String?> shareImage(Uint8List bytes, {String? text}) async {
     try {
       final dir = await getTemporaryDirectory();
-      final path =
-          '${DateTime.now().millisecondsSinceEpoch}.png';
+      final path = '${DateTime.now().millisecondsSinceEpoch}.png';
       await File('${dir.path}/$path').writeAsBytes(bytes);
-      await Share.shareXFiles(
-        [XFile('${dir.path}/$path', mimeType: 'image/png')],
-        text: text,
-      );
+      await Share.shareXFiles([
+        XFile('${dir.path}/$path', mimeType: 'image/png'),
+      ], text: text);
       return null;
     } catch (_) {
       return 'Could not share. Please try again.';

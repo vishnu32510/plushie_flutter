@@ -14,9 +14,9 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
-  })  : _cache = cache ?? CacheClient(),
-        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+  }) : _cache = cache ?? CacheClient(),
+       _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+       _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -36,14 +36,20 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     return _cache.read<User>(key: userCacheKey) ?? User.empty;
   }
 
-  Future<void> signUpWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<void> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code,
-          messageString: e.message);
+      throw SignUpWithEmailAndPasswordFailure.fromCode(
+        e.code,
+        messageString: e.message,
+      );
     } catch (_) {
       throw const SignUpWithEmailAndPasswordFailure();
     }
@@ -54,8 +60,9 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       late final firebase_auth.AuthCredential credential;
       if (kIsWeb) {
         final googleProvider = firebase_auth.OAuthProvider('google.com');
-        final userCredential =
-            await _firebaseAuth.signInWithPopup(googleProvider);
+        final userCredential = await _firebaseAuth.signInWithPopup(
+          googleProvider,
+        );
         credential = userCredential.credential!;
       } else {
         final googleUser = await _googleSignIn.signIn();
@@ -79,8 +86,9 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       late final firebase_auth.AuthCredential credential;
       if (kIsWeb) {
         final appleProvider = firebase_auth.OAuthProvider('apple.com');
-        final userCredential =
-            await _firebaseAuth.signInWithPopup(appleProvider);
+        final userCredential = await _firebaseAuth.signInWithPopup(
+          appleProvider,
+        );
         credential = userCredential.credential!;
       } else {
         final appleCredential = await SignInWithApple.getAppleIDCredential(
@@ -103,14 +111,20 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     }
   }
 
-  Future<void> logInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<void> logInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw LogInWithEmailAndPasswordFailure.fromCode(e.code,
-          messageString: e.message);
+      throw LogInWithEmailAndPasswordFailure.fromCode(
+        e.code,
+        messageString: e.message,
+      );
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }
@@ -118,10 +132,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   Future<void> logOut() async {
     try {
-      await Future.wait([
-        _firebaseAuth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
     } catch (_) {
       throw LogOutFailure();
     }
@@ -144,27 +155,40 @@ extension on firebase_auth.User {
 // ── Failure classes ───────────────────────────────────────────────────────────
 
 class SignUpWithEmailAndPasswordFailure implements Exception {
-  const SignUpWithEmailAndPasswordFailure(
-      [this.message = 'An unknown error occurred.', this.code = 'unknown']);
+  const SignUpWithEmailAndPasswordFailure([
+    this.message = 'An unknown error occurred.',
+    this.code = 'unknown',
+  ]);
 
-  factory SignUpWithEmailAndPasswordFailure.fromCode(String code,
-      {String? messageString}) {
+  factory SignUpWithEmailAndPasswordFailure.fromCode(
+    String code, {
+    String? messageString,
+  }) {
     switch (code) {
       case 'invalid-email':
         return SignUpWithEmailAndPasswordFailure(
-            'Email is not valid or badly formatted.', code);
+          'Email is not valid or badly formatted.',
+          code,
+        );
       case 'email-already-in-use':
         return SignUpWithEmailAndPasswordFailure(
-            'An account already exists for that email.', code);
+          'An account already exists for that email.',
+          code,
+        );
       case 'weak-password':
         return SignUpWithEmailAndPasswordFailure(
-            'Please enter a stronger password.', code);
+          'Please enter a stronger password.',
+          code,
+        );
       case 'operation-not-allowed':
         return SignUpWithEmailAndPasswordFailure(
-            'Operation is not allowed. Please contact support.', code);
+          'Operation is not allowed. Please contact support.',
+          code,
+        );
       default:
         return SignUpWithEmailAndPasswordFailure(
-            messageString ?? 'An unknown error occurred.');
+          messageString ?? 'An unknown error occurred.',
+        );
     }
   }
 
@@ -173,30 +197,39 @@ class SignUpWithEmailAndPasswordFailure implements Exception {
 }
 
 class LogInWithEmailAndPasswordFailure implements Exception {
-  const LogInWithEmailAndPasswordFailure(
-      [this.message = 'An unknown error occurred.']);
+  const LogInWithEmailAndPasswordFailure([
+    this.message = 'An unknown error occurred.',
+  ]);
 
-  factory LogInWithEmailAndPasswordFailure.fromCode(String code,
-      {String? messageString}) {
+  factory LogInWithEmailAndPasswordFailure.fromCode(
+    String code, {
+    String? messageString,
+  }) {
     switch (code) {
       case 'invalid-credential':
         return const LogInWithEmailAndPasswordFailure(
-            'Wrong email or password, please try again.');
+          'Wrong email or password, please try again.',
+        );
       case 'invalid-email':
         return const LogInWithEmailAndPasswordFailure(
-            'Email is not valid or badly formatted.');
+          'Email is not valid or badly formatted.',
+        );
       case 'user-not-found':
         return const LogInWithEmailAndPasswordFailure(
-            'No account found with this email.');
+          'No account found with this email.',
+        );
       case 'wrong-password':
         return const LogInWithEmailAndPasswordFailure(
-            'Incorrect password, please try again.');
+          'Incorrect password, please try again.',
+        );
       case 'user-disabled':
         return const LogInWithEmailAndPasswordFailure(
-            'This user has been disabled. Please contact support.');
+          'This user has been disabled. Please contact support.',
+        );
       default:
         return LogInWithEmailAndPasswordFailure(
-            messageString ?? 'An unknown error occurred.');
+          messageString ?? 'An unknown error occurred.',
+        );
     }
   }
 
@@ -204,24 +237,29 @@ class LogInWithEmailAndPasswordFailure implements Exception {
 }
 
 class LogInWithGoogleFailure implements Exception {
-  const LogInWithGoogleFailure(
-      [this.message = 'An unknown error occurred.']);
+  const LogInWithGoogleFailure([this.message = 'An unknown error occurred.']);
 
-  factory LogInWithGoogleFailure.fromCode(String code,
-      {String? messageString}) {
+  factory LogInWithGoogleFailure.fromCode(
+    String code, {
+    String? messageString,
+  }) {
     switch (code) {
       case 'account-exists-with-different-credential':
         return const LogInWithGoogleFailure(
-            'Account exists with different credentials.');
+          'Account exists with different credentials.',
+        );
       case 'invalid-credential':
         return const LogInWithGoogleFailure(
-            'The credential received is malformed or has expired.');
+          'The credential received is malformed or has expired.',
+        );
       case 'user-disabled':
         return const LogInWithGoogleFailure(
-            'This user has been disabled. Please contact support.');
+          'This user has been disabled. Please contact support.',
+        );
       default:
         return LogInWithGoogleFailure(
-            messageString ?? 'An unknown error occurred.');
+          messageString ?? 'An unknown error occurred.',
+        );
     }
   }
 
@@ -234,20 +272,27 @@ class LogOutFailure implements Exception {
 }
 
 class PasswordResetFailure implements Exception {
-  const PasswordResetFailure(
-      [this.message = 'An unknown error occurred.', this.code = 'unknown']);
+  const PasswordResetFailure([
+    this.message = 'An unknown error occurred.',
+    this.code = 'unknown',
+  ]);
 
   factory PasswordResetFailure.fromCode(String code, {String? messageString}) {
     switch (code) {
       case 'invalid-email':
         return PasswordResetFailure(
-            'Email is not valid or badly formatted.', code);
+          'Email is not valid or badly formatted.',
+          code,
+        );
       case 'user-not-found':
         return PasswordResetFailure(
-            'No account found with this email address.', code);
+          'No account found with this email address.',
+          code,
+        );
       default:
         return PasswordResetFailure(
-            messageString ?? 'An unknown error occurred.');
+          messageString ?? 'An unknown error occurred.',
+        );
     }
   }
 

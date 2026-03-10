@@ -24,10 +24,10 @@ class LightThemeState extends ThemeState {
   });
 
   static ThemeState get lightTheme => ThemeState(
-        themeData: PlushieTheme.light,
-        themeMode: ThemeMode.light,
-        themeEventType: ThemeType.lightMode,
-      );
+    themeData: PlushieTheme.light,
+    themeMode: ThemeMode.light,
+    themeEventType: ThemeType.lightMode,
+  );
 }
 
 class DarkThemeState extends ThemeState {
@@ -38,10 +38,10 @@ class DarkThemeState extends ThemeState {
   });
 
   static ThemeState get darkTheme => ThemeState(
-        themeData: PlushieTheme.dark,
-        themeMode: ThemeMode.dark,
-        themeEventType: ThemeType.darkMode,
-      );
+    themeData: PlushieTheme.dark,
+    themeMode: ThemeMode.dark,
+    themeEventType: ThemeType.darkMode,
+  );
 }
 
 class SystemThemeState extends ThemeState {
@@ -52,8 +52,8 @@ class SystemThemeState extends ThemeState {
   });
 
   static ThemeState get systemTheme => ThemeState(
-        themeData: PlushieTheme.light,
-        themeMode: ThemeMode.system,
-        themeEventType: ThemeType.system,
-      );
+    themeData: PlushieTheme.light,
+    themeMode: ThemeMode.system,
+    themeEventType: ThemeType.system,
+  );
 }

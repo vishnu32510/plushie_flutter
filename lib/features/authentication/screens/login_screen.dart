@@ -49,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 backgroundColor: const Color(0xFFB85C4A),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             );
           }
@@ -68,8 +69,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.subtleGray),
                 ),
-                child: const Icon(Icons.close_rounded,
-                    color: AppColors.warmBrown, size: 20),
+                child: const Icon(
+                  Icons.close_rounded,
+                  color: AppColors.warmBrown,
+                  size: 20,
+                ),
               ),
             ),
           ),
@@ -145,11 +149,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 decoration: _inputDecoration('Email', Icons.email_outlined),
-                validator: (v) => (v == null || !v.contains('@'))
-                    ? 'Enter a valid email'
-                    : null,
-                onChanged: (v) =>
-                    context.read<LoginBloc>().add(LoginEmailChanged(v)),
+                validator:
+                    (v) =>
+                        (v == null || !v.contains('@'))
+                            ? 'Enter a valid email'
+                            : null,
+                onChanged:
+                    (v) => context.read<LoginBloc>().add(LoginEmailChanged(v)),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -167,42 +173,56 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.warmBrownLight,
                       size: 20,
                     ),
-                    onPressed: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
+                    onPressed:
+                        () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                   ),
                 ),
-                validator: (v) => (v == null || v.length < 6)
-                    ? 'Password must be at least 6 characters'
-                    : null,
-                onChanged: (v) =>
-                    context.read<LoginBloc>().add(LoginPasswordChanged(v)),
+                validator:
+                    (v) =>
+                        (v == null || v.length < 6)
+                            ? 'Password must be at least 6 characters'
+                            : null,
+                onChanged:
+                    (v) =>
+                        context.read<LoginBloc>().add(LoginPasswordChanged(v)),
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton(
-                  onPressed: isLoading ? null : () => _handleEmailContinue(context),
+                  onPressed:
+                      isLoading ? null : () => _handleEmailContinue(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.warmBrown,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor:
-                        AppColors.warmBrown.withValues(alpha: 0.5),
+                    disabledBackgroundColor: AppColors.warmBrown.withValues(
+                      alpha: 0.5,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     elevation: 0,
                   ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                              color: Colors.white, strokeWidth: 2))
-                      : const Text(
-                          'Continue with Email',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w700),
-                        ),
+                  child:
+                      isLoading
+                          ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                          : const Text(
+                            'Continue with Email',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                 ),
               ),
             ],
@@ -212,8 +232,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  InputDecoration _inputDecoration(String label, IconData icon,
-      {Widget? suffix}) {
+  InputDecoration _inputDecoration(
+    String label,
+    IconData icon, {
+    Widget? suffix,
+  }) {
     return InputDecoration(
       labelText: label,
       prefixIcon: Icon(icon, color: AppColors.warmBrownLight, size: 20),
@@ -240,24 +263,28 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       children: [
         Expanded(
-            child: Divider(color: AppColors.subtleGray.withValues(alpha: 0.8))),
+          child: Divider(color: AppColors.subtleGray.withValues(alpha: 0.8)),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text('OR',
-              style: TextStyle(
-                  color: AppColors.warmBrownLight,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13)),
+          child: Text(
+            'OR',
+            style: TextStyle(
+              color: AppColors.warmBrownLight,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
         ),
         Expanded(
-            child: Divider(color: AppColors.subtleGray.withValues(alpha: 0.8))),
+          child: Divider(color: AppColors.subtleGray.withValues(alpha: 0.8)),
+        ),
       ],
     );
   }
 
   Widget _buildSocialButtons() {
-    final showApple =
-        !kIsWeb && (Platform.isIOS || Platform.isMacOS);
+    final showApple = !kIsWeb && (Platform.isIOS || Platform.isMacOS);
 
     return Column(
       children: [
@@ -265,8 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: Icons.g_mobiledata,
           iconColor: Colors.red,
           label: 'Continue with Google',
-          onTap: () =>
-              context.read<LoginBloc>().add(const LoginWithGoogle()),
+          onTap: () => context.read<LoginBloc>().add(const LoginWithGoogle()),
         ),
         if (showApple) ...[
           const SizedBox(height: 12),
@@ -274,8 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
             icon: Icons.apple,
             iconColor: AppColors.warmBrown,
             label: 'Continue with Apple',
-            onTap: () =>
-                context.read<LoginBloc>().add(const LoginWithApple()),
+            onTap: () => context.read<LoginBloc>().add(const LoginWithApple()),
           ),
         ],
       ],
@@ -285,11 +310,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleEmailContinue(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<LoginBloc>().add(
-            ContinueWithEmailAndPassword(
-              email: _emailCtrl.text.trim(),
-              password: _passwordCtrl.text.trim(),
-            ),
-          );
+        ContinueWithEmailAndPassword(
+          email: _emailCtrl.text.trim(),
+          password: _passwordCtrl.text.trim(),
+        ),
+      );
     }
   }
 }
@@ -318,15 +343,17 @@ class _SocialButton extends StatelessWidget {
         label: Text(
           label,
           style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.warmBrown),
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: AppColors.warmBrown,
+          ),
         ),
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.cardSurface,
           side: BorderSide(color: AppColors.subtleGray),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
       ),
     );

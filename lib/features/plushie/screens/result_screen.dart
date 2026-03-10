@@ -32,9 +32,9 @@ class _ResultScreenState extends State<ResultScreen> {
     setState(() => _saving = true);
     final error = await MediaService.saveToGallery(bytes);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error ?? 'Saved to gallery!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error ?? 'Saved to gallery!')));
       setState(() => _saving = false);
     }
   }
@@ -49,9 +49,9 @@ class _ResultScreenState extends State<ResultScreen> {
     );
     if (mounted) {
       if (error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
       }
       setState(() => _sharing = false);
     }
@@ -76,8 +76,11 @@ class _ResultScreenState extends State<ResultScreen> {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.subtleGray),
             ),
-            child: const Icon(Icons.arrow_back_rounded,
-                color: AppColors.warmBrown, size: 20),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppColors.warmBrown,
+              size: 20,
+            ),
           ),
         ),
         title: Text(
@@ -122,9 +125,10 @@ class _ResultScreenState extends State<ResultScreen> {
     final Widget imageWidget;
 
     if (_showingOriginal) {
-      imageWidget = widget.imageBytes != null
-          ? Image.memory(widget.imageBytes!, fit: BoxFit.cover)
-          : _buildPlaceholder('No original image');
+      imageWidget =
+          widget.imageBytes != null
+              ? Image.memory(widget.imageBytes!, fit: BoxFit.cover)
+              : _buildPlaceholder('No original image');
     } else {
       if (widget.resultBytes != null) {
         imageWidget = Image.memory(widget.resultBytes!, fit: BoxFit.cover);
@@ -137,15 +141,16 @@ class _ResultScreenState extends State<ResultScreen> {
             return Center(
               child: CircularProgressIndicator(
                 color: AppColors.warmAmber,
-                value: progress.expectedTotalBytes != null
-                    ? progress.cumulativeBytesLoaded /
-                        progress.expectedTotalBytes!
-                    : null,
+                value:
+                    progress.expectedTotalBytes != null
+                        ? progress.cumulativeBytesLoaded /
+                            progress.expectedTotalBytes!
+                        : null,
               ),
             );
           },
-          errorBuilder: (_, __, ___) =>
-              _buildPlaceholder('Could not load image'),
+          errorBuilder:
+              (_, __, ___) => _buildPlaceholder('Could not load image'),
         );
       } else {
         imageWidget = _buildPlaceholder('Plushie generation failed');
@@ -184,7 +189,11 @@ class _ResultScreenState extends State<ResultScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.touch_app_rounded, size: 14, color: AppColors.warmBrownLight),
+        Icon(
+          Icons.touch_app_rounded,
+          size: 14,
+          color: AppColors.warmBrownLight,
+        ),
         const SizedBox(width: 6),
         Text(
           'Hold to see original',
@@ -201,12 +210,16 @@ class _ResultScreenState extends State<ResultScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.image_not_supported_rounded,
-                size: 40, color: AppColors.warmBrownLight),
+            Icon(
+              Icons.image_not_supported_rounded,
+              size: 40,
+              color: AppColors.warmBrownLight,
+            ),
             const SizedBox(height: 8),
-            Text(message,
-                style:
-                    TextStyle(color: AppColors.warmBrownLight, fontSize: 14)),
+            Text(
+              message,
+              style: TextStyle(color: AppColors.warmBrownLight, fontSize: 14),
+            ),
           ],
         ),
       ),
@@ -216,13 +229,17 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget _buildShareButton() {
     return ElevatedButton.icon(
       onPressed: _sharing ? null : _shareImage,
-      icon: _sharing
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                  color: Colors.white, strokeWidth: 2))
-          : const Icon(Icons.share_rounded, size: 18),
+      icon:
+          _sharing
+              ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+              : const Icon(Icons.share_rounded, size: 18),
       label: const Text('Share'),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.warmBrown,
@@ -251,16 +268,23 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           ],
         ),
-        child: _saving
-            ? const Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                      color: Colors.white, strokeWidth: 2),
+        child:
+            _saving
+                ? const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                )
+                : const Icon(
+                  Icons.download_rounded,
+                  color: Colors.white,
+                  size: 24,
                 ),
-              )
-            : const Icon(Icons.download_rounded, color: Colors.white, size: 24),
       ),
     );
   }
@@ -283,11 +307,14 @@ class _ResultScreenState extends State<ResultScreen> {
           ],
         ),
         child: const Center(
-          child: Text('WA',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13)),
+          child: Text(
+            'WA',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 13,
+            ),
+          ),
         ),
       ),
     );
@@ -306,11 +333,11 @@ class _ResultScreenState extends State<ResultScreen> {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.warmBrown,
           side: const BorderSide(color: AppColors.subtleGray, width: 1.5),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 16),
-          textStyle:
-              const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
     );

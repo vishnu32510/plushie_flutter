@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ThemeType {
-  darkMode,
-  lightMode,
-  system,
-}
+enum ThemeType { darkMode, lightMode, system }
 
 extension ThemeTypeDetails on ThemeType {
   String get themeName {

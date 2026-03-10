@@ -17,19 +17,23 @@ class CustomRouter {
       case AppRoutes.result:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
-          builder: (_) => ResultScreen(
-            imageBytes: args?['imageBytes'],
-            resultUrl: args?['resultUrl'],
-            resultBytes: args?['resultBytes'],
-          ),
+          builder:
+              (_) => ResultScreen(
+                imageBytes: args?['imageBytes'],
+                resultUrl: args?['resultUrl'],
+                resultBytes: args?['resultBytes'],
+              ),
         );
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('No route defined for ${settings.name}')),
-          ),
+          builder:
+              (_) => Scaffold(
+                body: Center(
+                  child: Text('No route defined for ${settings.name}'),
+                ),
+              ),
         );
     }
   }

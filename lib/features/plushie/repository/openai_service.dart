@@ -9,7 +9,7 @@ class OpenAIService {
   final HttpServices _httpServices;
 
   OpenAIService({required String apiKey})
-      : _httpServices = HttpServices(apiKey: apiKey);
+    : _httpServices = HttpServices(apiKey: apiKey);
 
   Future<OpenAIImageResult> transformToPlushie({
     required File imageFile,
@@ -32,7 +32,7 @@ class OpenAIService {
           'quality': 'medium',
           'size': '1024x1024',
           'output_format': 'png',
-        }
+        },
       ],
       'input': [
         {
@@ -42,10 +42,7 @@ class OpenAIService {
               'type': 'input_image',
               'image_url': 'data:$mimeType;base64,$base64Image',
             },
-            {
-              'type': 'input_text',
-              'text': AppConstants.plushiePrompt,
-            },
+            {'type': 'input_text', 'text': AppConstants.plushiePrompt},
           ],
         },
       ],

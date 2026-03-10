@@ -7,13 +7,13 @@ final class AuthenticationBlocState extends Equatable {
   });
 
   const AuthenticationBlocState.unknown()
-      : this._(status: AuthenticationStatus.unknown);
+    : this._(status: AuthenticationStatus.unknown);
 
   const AuthenticationBlocState.authenticated(User user)
-      : this._(status: AuthenticationStatus.authenticated, user: user);
+    : this._(status: AuthenticationStatus.authenticated, user: user);
 
   const AuthenticationBlocState.unauthenticated()
-      : this._(status: AuthenticationStatus.unauthenticated);
+    : this._(status: AuthenticationStatus.unauthenticated);
 
   final AuthenticationStatus status;
   final User user;

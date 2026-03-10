@@ -13,8 +13,8 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationBlocState> {
   AuthenticationBloc({
     required FirebaseAuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(const AuthenticationBlocState.unknown()) {
+  }) : _authenticationRepository = authenticationRepository,
+       super(const AuthenticationBlocState.unknown()) {
     on<_UserChanged>(_onUserChanged);
     on<LogoutRequested>(_onLogoutRequested);
     _userSubscription = _authenticationRepository.user.listen(
@@ -26,14 +26,20 @@ class AuthenticationBloc
   late final StreamSubscription<User> _userSubscription;
 
   void _onUserChanged(
-      _UserChanged event, Emitter<AuthenticationBlocState> emit) {
-    emit(event.user.isNotEmpty
-        ? AuthenticationBlocState.authenticated(event.user)
-        : const AuthenticationBlocState.unauthenticated());
+    _UserChanged event,
+    Emitter<AuthenticationBlocState> emit,
+  ) {
+    emit(
+      event.user.isNotEmpty
+          ? AuthenticationBlocState.authenticated(event.user)
+          : const AuthenticationBlocState.unauthenticated(),
+    );
   }
 
   void _onLogoutRequested(
-      LogoutRequested event, Emitter<AuthenticationBlocState> emit) {
+    LogoutRequested event,
+    Emitter<AuthenticationBlocState> emit,
+  ) {
     unawaited(_authenticationRepository.logOut());
   }
 

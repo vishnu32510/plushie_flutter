@@ -2,7 +2,8 @@ abstract class AppConstants {
   static const String appTitle = 'Plushie Yourself';
 
   // OpenAI endpoints
-  static const String openAiResponsesUrl = 'https://api.openai.com/v1/responses';
+  static const String openAiResponsesUrl =
+      'https://api.openai.com/v1/responses';
 
   // Prompt sent to Responses API (single call — keeps real background)
   static const String plushiePrompt =
@@ -14,5 +15,4 @@ abstract class AppConstants {
       'The final image should feel like a charming, collectible plush toy - cozy, wholesome, and huggable, while still recognizable as the original subject. '
       'Keep the real photo background and environment exactly as-is. Keep the clothing and scene unchanged. '
       'Transform only the faces into plushie style: rounded felt face, large embroidered eyes with white highlight dot, rosy blush cheeks, stitched smile, felt skin texture.';
-
 }

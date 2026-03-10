@@ -30,8 +30,11 @@ class HttpServices extends Services {
 
   HttpServices({required this.apiKey});
 
-  Future postMethod(String url, var body,
-      {Duration timeout = const Duration(seconds: 60)}) async {
+  Future postMethod(
+    String url,
+    var body, {
+    Duration timeout = const Duration(seconds: 60),
+  }) async {
     var bo = convert.jsonEncode(body);
     try {
       var data = await http
@@ -45,7 +48,9 @@ class HttpServices extends Services {
           )
           .timeout(timeout);
       debugPrint('[HTTP] ${data.statusCode} $url');
-      debugPrint('[HTTP] body: ${data.body.length > 300 ? '${data.body.substring(0, 300)}...' : data.body}');
+      debugPrint(
+        '[HTTP] body: ${data.body.length > 300 ? '${data.body.substring(0, 300)}...' : data.body}',
+      );
       if (data.statusCode == 200 || data.statusCode == 201) {
         return convert.jsonDecode(data.body);
       } else if (data.statusCode == 400 || data.statusCode == 404) {
@@ -78,12 +83,11 @@ class HttpServices extends Services {
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.files.addAll(files);
       request.fields.addAll(fields);
-      request.headers.addAll({
-        'Authorization': 'Bearer $apiKey',
-      });
+      request.headers.addAll({'Authorization': 'Bearer $apiKey'});
 
-      var streamedResponse =
-          await request.send().timeout(const Duration(seconds: 120));
+      var streamedResponse = await request.send().timeout(
+        const Duration(seconds: 120),
+      );
       var responseBody = await streamedResponse.stream.bytesToString();
 
       debugPrint('Status: ${streamedResponse.statusCode}');

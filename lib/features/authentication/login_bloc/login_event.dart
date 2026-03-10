@@ -24,7 +24,10 @@ final class LoginPasswordChanged extends LoginEvent {
 }
 
 final class LoginWithEmailAndPassword extends LoginEvent {
-  const LoginWithEmailAndPassword({required this.email, required this.password});
+  const LoginWithEmailAndPassword({
+    required this.email,
+    required this.password,
+  });
   final String email;
   final String password;
 
@@ -33,7 +36,10 @@ final class LoginWithEmailAndPassword extends LoginEvent {
 }
 
 final class SignUpWithEmailAndPassword extends LoginEvent {
-  const SignUpWithEmailAndPassword({required this.email, required this.password});
+  const SignUpWithEmailAndPassword({
+    required this.email,
+    required this.password,
+  });
   final String email;
   final String password;
 
@@ -42,7 +48,10 @@ final class SignUpWithEmailAndPassword extends LoginEvent {
 }
 
 final class ContinueWithEmailAndPassword extends LoginEvent {
-  const ContinueWithEmailAndPassword({required this.email, required this.password});
+  const ContinueWithEmailAndPassword({
+    required this.email,
+    required this.password,
+  });
   final String email;
   final String password;
 

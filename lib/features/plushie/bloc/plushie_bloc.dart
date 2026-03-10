@@ -11,8 +11,8 @@ class PlushieBloc extends Bloc<PlushieEvent, PlushieState> {
   final OpenAIService _openAIService;
 
   PlushieBloc({required OpenAIService openAIService})
-      : _openAIService = openAIService,
-        super(const PlushieInitial()) {
+    : _openAIService = openAIService,
+      super(const PlushieInitial()) {
     on<TransformImageEvent>(_onTransformImage);
     on<ResetPlushieEvent>(_onReset);
   }
@@ -36,11 +36,13 @@ class PlushieBloc extends Bloc<PlushieEvent, PlushieState> {
     );
 
     if (result.isSuccess) {
-      emit(PlushieSuccess(
-        resultBytes: result.imageBytes,
-        resultUrl: result.url,
-        originalImageBytes: originalBytes,
-      ));
+      emit(
+        PlushieSuccess(
+          resultBytes: result.imageBytes,
+          resultUrl: result.url,
+          originalImageBytes: originalBytes,
+        ),
+      );
     } else {
       emit(PlushieError(result.error ?? 'Unknown error'));
     }
