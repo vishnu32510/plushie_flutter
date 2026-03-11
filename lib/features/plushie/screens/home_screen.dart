@@ -1,16 +1,20 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plushie_yourself/core/config/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
+import 'package:plushie_yourself/core/services/usage_service.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
+import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
+import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
 import 'package:plushie_yourself/features/plushie/widgets/plushie_gallery.dart';
 import 'package:plushie_yourself/features/plushie/widgets/plushie_result_card.dart';
+import 'package:plushie_yourself/features/profile/profile_bottom_sheet.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +27,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
+
+  void _openProfile() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const ProfileBottomSheet(),
+    );
+  }
 
   void _openGallery() {
     showModalBottomSheet(
@@ -149,9 +162,20 @@ class _HomeScreenState extends State<HomeScreen> {
       _showImageSourceSheet();
       return;
     }
-    if (!kDebugMode && !_isLoggedIn) {
-      await Navigator.pushNamed(context, AppRoutes.login);
+    if (!_isLoggedIn) {
+      await showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        builder: (_) => const LoginBottomSheet(),
+      );
       if (!mounted || !_isLoggedIn) return;
+    }
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null && !await UsageService.canGenerate(uid)) {
+      if (!mounted) return;
+      PaywallScreen.show(context);
+      return;
     }
     if (mounted) {
       context.read<PlushieBloc>().add(TransformImageEvent(_selectedImage!));
@@ -163,6 +187,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<PlushieBloc, PlushieState>(
       listener: (context, state) {
         if (state is PlushieSuccess) {
+          final uid = FirebaseAuth.instance.currentUser?.uid;
+          if (uid != null) UsageService.increment(uid);
           showDialog(
             context: context,
             barrierColor: Colors.black.withValues(alpha: 0.6),
@@ -259,22 +285,44 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        GestureDetector(
-          onTap: _openGallery,
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.warmCream,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.subtleGray, width: 1.5),
+        Row(
+          children: [
+            GestureDetector(
+              onTap: _openGallery,
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.warmCream,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                ),
+                child: const Icon(
+                  Icons.photo_library_rounded,
+                  color: AppColors.warmBrown,
+                  size: 20,
+                ),
+              ),
             ),
-            child: const Icon(
-              Icons.photo_library_rounded,
-              color: AppColors.warmBrown,
-              size: 20,
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: _openProfile,
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.warmCream,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                ),
+                child: const Icon(
+                  Icons.person_rounded,
+                  color: AppColors.warmBrown,
+                  size: 20,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
