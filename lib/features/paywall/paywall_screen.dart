@@ -44,7 +44,7 @@ class PaywallScreen extends StatelessWidget {
             const Text('🧸', style: TextStyle(fontSize: 56)),
             const SizedBox(height: 20),
             const Text(
-              'You\'ve used all\n5 free plushies!',
+              'You\'ve used your\n5 free plushies this week!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 26,
@@ -55,7 +55,7 @@ class PaywallScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Unlock unlimited generations and keep creating adorable plushies of yourself.',
+              'Upgrade for unlimited generations every week and keep creating adorable plushies.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,

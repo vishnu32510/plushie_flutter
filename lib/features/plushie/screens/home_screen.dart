@@ -8,9 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
 import 'package:plushie_yourself/core/services/usage_service.dart';
+import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
-import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
 import 'package:plushie_yourself/features/plushie/widgets/plushie_gallery.dart';
 import 'package:plushie_yourself/features/plushie/widgets/plushie_result_card.dart';
@@ -154,7 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool get _isLoggedIn {
     final authState = context.read<AuthenticationBloc>().state;
-    return authState.status == AuthenticationStatus.authenticated;
+    // Treat "unknown" (Firebase still restoring session) as logged in to avoid
+    // flashing the login sheet on restart when the user is already signed in.
+    return authState.status != AuthenticationStatus.unauthenticated;
   }
 
   Future<void> _transform() async {
