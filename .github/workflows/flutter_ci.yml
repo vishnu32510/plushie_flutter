@@ -27,7 +27,9 @@ jobs:
       - name: Create firebase_options.dart
         env:
           FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTIONS }}
-        run: python3 -c "import os; open('lib/firebase_options.dart', 'w').write(os.environ['FIREBASE_OPTIONS'])"
+        run: |
+          python3 -c "import os; open('lib/firebase_options.dart', 'w').write(os.environ['FIREBASE_OPTIONS'])"
+          dart format lib/firebase_options.dart
 
       - name: Install dependencies
         run: flutter pub get
