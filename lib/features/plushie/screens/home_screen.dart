@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,8 @@ import 'package:plushie_yourself/core/config/routes.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
+import 'package:plushie_yourself/features/plushie/widgets/plushie_gallery.dart';
+import 'package:plushie_yourself/features/plushie/widgets/plushie_result_card.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,6 +24,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
 
+  void _openGallery() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (_, controller) => const PlushieGallery(),
+      ),
+    );
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? xFile = await _picker.pickImage(
@@ -28,14 +47,38 @@ class _HomeScreenState extends State<HomeScreen> {
         maxWidth: 1024,
         maxHeight: 1024,
       );
-      if (xFile != null) {
-        setState(() {
-          _selectedImage = File(xFile.path);
-        });
+      if (xFile == null) return;
+      File imageFile = File(xFile.path);
+      if (source == ImageSource.camera) {
+        imageFile = await _flipHorizontally(imageFile);
       }
+      setState(() => _selectedImage = imageFile);
     } catch (e) {
       ToastService.showError('Could not pick image. Please try again.');
     }
+  }
+
+  Future<File> _flipHorizontally(File file) async {
+    final bytes = await file.readAsBytes();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    final src = frame.image;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    canvas.translate(src.width.toDouble(), 0);
+    canvas.scale(-1, 1);
+    canvas.drawImage(src, Offset.zero, Paint());
+    final picture = recorder.endRecording();
+    final flipped = await picture.toImage(src.width, src.height);
+    final flippedBytes = await flipped.toByteData(format: ui.ImageByteFormat.png);
+
+    final outPath = '${file.parent.path}/flipped_${file.uri.pathSegments.last}';
+    final outFile = File(outPath);
+    await outFile.writeAsBytes(
+      Uint8List.view(flippedBytes!.buffer),
+    );
+    return outFile;
   }
 
   void _showImageSourceSheet() {
@@ -119,14 +162,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocListener<PlushieBloc, PlushieState>(
       listener: (context, state) {
         if (state is PlushieSuccess) {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.result,
-            arguments: {
-              'imageBytes': state.originalImageBytes,
-              'resultBytes': state.resultBytes,
-              'resultUrl': state.resultUrl,
-            },
+          showDialog(
+            context: context,
+            barrierColor: Colors.black.withValues(alpha: 0.6),
+            builder: (_) => PlushieResultCard(
+              resultBytes: state.resultBytes,
+              originalBytes: state.originalImageBytes,
+              onCreateAnother: () {
+                context.read<PlushieBloc>().add(const ResetPlushieEvent());
+                setState(() => _selectedImage = null);
+              },
+            ),
           );
         } else if (state is PlushieError) {
           ToastService.showError(state.message);
@@ -174,34 +220,58 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Plushie',
-          style: TextStyle(
-            fontSize: 42,
-            fontWeight: FontWeight.w800,
-            color: AppColors.warmBrown,
-            height: 1.1,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Plushie',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.warmBrown,
+                  height: 1.1,
+                ),
+              ),
+              const Text(
+                'Yourself',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.warmAmber,
+                  height: 1.1,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Turn yourself into an adorable handcrafted plush toy.',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: AppColors.warmBrownLight,
+                  height: 1.5,
+                ),
+              ),
+            ],
           ),
         ),
-        const Text(
-          'Yourself',
-          style: TextStyle(
-            fontSize: 42,
-            fontWeight: FontWeight.w800,
-            color: AppColors.warmAmber,
-            height: 1.1,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'Turn yourself into an adorable handcrafted plush toy.',
-          style: TextStyle(
-            fontSize: 15,
-            color: AppColors.warmBrownLight,
-            height: 1.5,
+        GestureDetector(
+          onTap: _openGallery,
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.warmCream,
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.subtleGray, width: 1.5),
+            ),
+            child: const Icon(
+              Icons.photo_library_rounded,
+              color: AppColors.warmBrown,
+              size: 20,
+            ),
           ),
         ),
       ],
@@ -444,50 +514,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildLoadingOverlay() {
-    return Positioned.fill(
-      child: Container(
-        color: Colors.black.withValues(alpha: 0.4),
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: AppColors.cardSurface,
-              borderRadius: BorderRadius.circular(28),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(
-                  width: 56,
-                  height: 56,
-                  child: CircularProgressIndicator(
-                    color: AppColors.warmAmber,
-                    strokeWidth: 3,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Creating your plushie...',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.warmBrown,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'This may take a moment',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.warmBrownLight,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return const Positioned.fill(child: _PlushieLoadingOverlay());
   }
 }
 
@@ -539,6 +566,155 @@ class _SourceOption extends StatelessWidget {
               color: AppColors.warmBrownLight,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlushieLoadingOverlay extends StatefulWidget {
+  const _PlushieLoadingOverlay();
+
+  @override
+  State<_PlushieLoadingOverlay> createState() => _PlushieLoadingOverlayState();
+}
+
+class _PlushieLoadingOverlayState extends State<_PlushieLoadingOverlay>
+    with SingleTickerProviderStateMixin {
+  static const _messages = [
+    ('🧵', 'Stitching the seams...'),
+    ('🪡', 'Weaving the fabric...'),
+    ('✨', 'Adding some magic...'),
+    ('🎀', 'Tying the bow...'),
+    ('🧸', 'Almost ready!'),
+  ];
+
+  late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
+  int _messageIndex = 0;
+  Timer? _messageTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 0.92, end: 1.08).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+    _messageTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (mounted) {
+        setState(() => _messageIndex = (_messageIndex + 1) % _messages.length);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    _messageTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final (emoji, text) = _messages[_messageIndex];
+    return Container(
+      color: Colors.black.withValues(alpha: 0.45),
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
+          decoration: BoxDecoration(
+            color: AppColors.cardSurface,
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.warmAmber.withValues(alpha: 0.15),
+                blurRadius: 40,
+                spreadRadius: 4,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ScaleTransition(
+                scale: _pulseAnimation,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        AppColors.warmAmber.withValues(alpha: 0.25),
+                        AppColors.warmAmber.withValues(alpha: 0.05),
+                      ],
+                    ),
+                    border: Border.all(
+                      color: AppColors.warmAmber.withValues(alpha: 0.4),
+                      width: 2,
+                    ),
+                  ),
+                  child: const Center(
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: CircularProgressIndicator(
+                        color: AppColors.warmAmber,
+                        strokeWidth: 3,
+                        strokeCap: StrokeCap.round,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder:
+                    (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, 0.2),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    ),
+                child: Column(
+                  key: ValueKey(_messageIndex),
+                  children: [
+                    Text(
+                      emoji,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.warmBrown,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Crafting your plushie with care',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.warmBrownLight,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -46,6 +46,7 @@ class _PlushieGalleryState extends State<PlushieGallery> {
           (_) => PlushieResultCard(
             resultBytes: bytes,
             originalBytes: null,
+            autoSave: false,
             onCreateAnother: () => Navigator.of(context).pop(),
           ),
     );

@@ -8,12 +8,14 @@ class PlushieResultCard extends StatefulWidget {
   final Uint8List? resultBytes;
   final Uint8List? originalBytes;
   final VoidCallback onCreateAnother;
+  final bool autoSave;
 
   const PlushieResultCard({
     super.key,
     required this.resultBytes,
     required this.originalBytes,
     required this.onCreateAnother,
+    this.autoSave = true,
   });
 
   @override
@@ -28,8 +30,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
   @override
   void initState() {
     super.initState();
-    // Auto-save to local storage
-    if (widget.resultBytes != null) {
+    if (widget.autoSave && widget.resultBytes != null) {
       PlushieStorageService.save(widget.resultBytes!);
     }
   }
@@ -153,11 +154,12 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
               : const Center(child: Text('No image'));
     }
 
+    final hasOriginal = widget.originalBytes != null;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
-        onLongPressStart: (_) => setState(() => _showingOriginal = true),
-        onLongPressEnd: (_) => setState(() => _showingOriginal = false),
+        onLongPressStart: hasOriginal ? (_) => setState(() => _showingOriginal = true) : null,
+        onLongPressEnd: hasOriginal ? (_) => setState(() => _showingOriginal = false) : null,
         child: Stack(
           children: [
             AnimatedSwitcher(
