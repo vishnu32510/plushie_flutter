@@ -158,8 +158,12 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
-        onLongPressStart: hasOriginal ? (_) => setState(() => _showingOriginal = true) : null,
-        onLongPressEnd: hasOriginal ? (_) => setState(() => _showingOriginal = false) : null,
+        onLongPressStart:
+            hasOriginal ? (_) => setState(() => _showingOriginal = true) : null,
+        onLongPressEnd:
+            hasOriginal
+                ? (_) => setState(() => _showingOriginal = false)
+                : null,
         child: Stack(
           children: [
             AnimatedSwitcher(

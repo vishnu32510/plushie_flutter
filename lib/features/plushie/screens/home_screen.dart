@@ -29,13 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.75,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (_, controller) => const PlushieGallery(),
-      ),
+      builder:
+          (_) => DraggableScrollableSheet(
+            initialChildSize: 0.75,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (_, controller) => const PlushieGallery(),
+          ),
     );
   }
 
@@ -71,13 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
     canvas.drawImage(src, Offset.zero, Paint());
     final picture = recorder.endRecording();
     final flipped = await picture.toImage(src.width, src.height);
-    final flippedBytes = await flipped.toByteData(format: ui.ImageByteFormat.png);
+    final flippedBytes = await flipped.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
 
     final outPath = '${file.parent.path}/flipped_${file.uri.pathSegments.last}';
     final outFile = File(outPath);
-    await outFile.writeAsBytes(
-      Uint8List.view(flippedBytes!.buffer),
-    );
+    await outFile.writeAsBytes(Uint8List.view(flippedBytes!.buffer));
     return outFile;
   }
 
@@ -165,14 +166,15 @@ class _HomeScreenState extends State<HomeScreen> {
           showDialog(
             context: context,
             barrierColor: Colors.black.withValues(alpha: 0.6),
-            builder: (_) => PlushieResultCard(
-              resultBytes: state.resultBytes,
-              originalBytes: state.originalImageBytes,
-              onCreateAnother: () {
-                context.read<PlushieBloc>().add(const ResetPlushieEvent());
-                setState(() => _selectedImage = null);
-              },
-            ),
+            builder:
+                (_) => PlushieResultCard(
+                  resultBytes: state.resultBytes,
+                  originalBytes: state.originalImageBytes,
+                  onCreateAnother: () {
+                    context.read<PlushieBloc>().add(const ResetPlushieEvent());
+                    setState(() => _selectedImage = null);
+                  },
+                ),
           );
         } else if (state is PlushieError) {
           ToastService.showError(state.message);
@@ -689,10 +691,7 @@ class _PlushieLoadingOverlayState extends State<_PlushieLoadingOverlay>
                 child: Column(
                   key: ValueKey(_messageIndex),
                   children: [
-                    Text(
-                      emoji,
-                      style: const TextStyle(fontSize: 28),
-                    ),
+                    Text(emoji, style: const TextStyle(fontSize: 28)),
                     const SizedBox(height: 8),
                     Text(
                       text,
@@ -708,10 +707,7 @@ class _PlushieLoadingOverlayState extends State<_PlushieLoadingOverlay>
               const SizedBox(height: 12),
               Text(
                 'Crafting your plushie with care',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.warmBrownLight,
-                ),
+                style: TextStyle(fontSize: 13, color: AppColors.warmBrownLight),
               ),
             ],
           ),
