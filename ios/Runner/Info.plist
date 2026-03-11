@@ -52,7 +52,7 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>GIDClientID</key>
-	<string>196346098098-ktp22qc6tqccto4eik6nb0o4kn893l96.apps.googleusercontent.com</string>
+	<string>196346098098-ecis4babfsbpvbrf8ke2roomnu4snc7e.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -60,7 +60,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.196346098098-ktp22qc6tqccto4eik6nb0o4kn893l96</string>
+				<string>com.googleusercontent.apps.196346098098-ecis4babfsbpvbrf8ke2roomnu4snc7e</string>
 			</array>
 		</dict>
 	</array>
