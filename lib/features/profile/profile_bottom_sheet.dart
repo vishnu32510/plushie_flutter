@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plushie_yourself/core/services/plushie_storage_service.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
 import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
@@ -108,6 +109,13 @@ class ProfileBottomSheet extends StatelessWidget {
                     );
                   },
                 ),
+              if (isLoggedIn)
+                _MenuItem(
+                  icon: Icons.delete_forever_rounded,
+                  label: 'Delete account',
+                  color: const Color(0xFFB85C4A),
+                  onTap: () => _handleDeleteAccount(context),
+                ),
 
               const SizedBox(height: 4),
               Divider(color: AppColors.subtleGray.withValues(alpha: 0.6)),
@@ -163,6 +171,64 @@ class ProfileBottomSheet extends StatelessWidget {
 void _openUrl(BuildContext context, String url) {
   Navigator.pop(context);
   launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+}
+
+Future<void> _handleDeleteAccount(BuildContext context) async {
+  final shouldDelete = await showDialog<bool>(
+    context: context,
+    builder:
+        (dialogContext) => AlertDialog(
+          title: const Text('Delete account?'),
+          content: const Text(
+            'This will permanently delete your account from Firebase. '
+            'Your in-app plushie list will be cleared on this device, but image files are not deleted from Photos.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Delete'),
+            ),
+          ],
+        ),
+  );
+
+  if (shouldDelete != true || !context.mounted) return;
+
+  Navigator.pop(context);
+  showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder:
+        (_) => const Center(
+          child: CircularProgressIndicator(color: AppColors.warmAmber),
+        ),
+  );
+
+  try {
+    await context.read<FirebaseAuthenticationRepository>().deleteAccount();
+    await PlushieStorageService.clearVisibleEntries();
+    if (!context.mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Account deleted. Local gallery list cleared.')),
+    );
+  } on DeleteAccountFailure catch (e) {
+    if (!context.mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(e.message)));
+  } catch (_) {
+    if (!context.mounted) return;
+    Navigator.of(context, rootNavigator: true).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Could not delete account. Please try again.')),
+    );
+  }
 }
 
 class _MenuItem extends StatelessWidget {

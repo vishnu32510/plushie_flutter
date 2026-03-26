@@ -30,4 +30,11 @@ brew install cocoapods
 # Install CocoaPods dependencies.
 cd ios && pod install
 
+# Debug checks for CI artifacts written from secrets.
+cd "$CI_PRIMARY_REPOSITORY_PATH"
+echo "ENV_FILE bytes: $(wc -c < .env)"
+echo "firebase_options.dart bytes: $(wc -c < lib/firebase_options.dart)"
+test -s .env || { echo ".env empty"; exit 1; }
+test -s lib/firebase_options.dart || { echo "firebase_options.dart empty"; exit 1; }
+
 exit 0

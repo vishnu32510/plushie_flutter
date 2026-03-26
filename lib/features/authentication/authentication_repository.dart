@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -143,6 +144,28 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw PasswordResetFailure.fromCode(e.code, messageString: e.message);
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw const DeleteAccountFailure('No signed-in user found.');
+    }
+
+    try {
+      // Remove per-user usage data if present.
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+    } catch (_) {
+      // Ignore missing docs; continue account deletion.
+    }
+
+    try {
+      await user.delete();
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw DeleteAccountFailure.fromCode(e.code, messageString: e.message);
+    } catch (_) {
+      throw const DeleteAccountFailure();
     }
   }
 }
@@ -298,4 +321,28 @@ class PasswordResetFailure implements Exception {
 
   final String message;
   final String code;
+}
+
+class DeleteAccountFailure implements Exception {
+  const DeleteAccountFailure([this.message = 'Could not delete account.']);
+
+  factory DeleteAccountFailure.fromCode(
+    String code, {
+    String? messageString,
+  }) {
+    switch (code) {
+      case 'requires-recent-login':
+        return const DeleteAccountFailure(
+          'For security, please sign in again and retry deleting your account.',
+        );
+      case 'user-not-found':
+        return const DeleteAccountFailure('Account was already removed.');
+      default:
+        return DeleteAccountFailure(
+          messageString ?? 'Could not delete account.',
+        );
+    }
+  }
+
+  final String message;
 }
