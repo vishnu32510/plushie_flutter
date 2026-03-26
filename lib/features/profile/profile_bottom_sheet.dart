@@ -242,8 +242,8 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
                 onPressed: () {
                   Navigator.pop(context);
                   context.read<AuthenticationBloc>().add(
-                        const LogoutRequested(),
-                      );
+                    const LogoutRequested(),
+                  );
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
