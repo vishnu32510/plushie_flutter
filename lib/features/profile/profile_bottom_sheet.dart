@@ -141,26 +141,17 @@ class ProfileBottomSheet extends StatelessWidget {
               _MenuItem(
                 icon: Icons.privacy_tip_outlined,
                 label: 'Privacy Policy',
-                onTap: () => _openUrl(
-                  context,
-                  AppConstants.privacyPolicyUrl,
-                ),
+                onTap: () => _openUrl(context, AppConstants.privacyPolicyUrl),
               ),
               _MenuItem(
                 icon: Icons.description_outlined,
                 label: 'Terms of Service',
-                onTap: () => _openUrl(
-                  context,
-                  AppConstants.termsUrl,
-                ),
+                onTap: () => _openUrl(context, AppConstants.termsUrl),
               ),
               _MenuItem(
                 icon: Icons.help_outline_rounded,
                 label: 'Support',
-                onTap: () => _openUrl(
-                  context,
-                  AppConstants.supportUrl,
-                ),
+                onTap: () => _openUrl(context, AppConstants.supportUrl),
               ),
             ],
           ),
