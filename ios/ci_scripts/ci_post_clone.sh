@@ -25,6 +25,21 @@ else
   printf "%s" "$FIREBASE_OPTIONS" > lib/firebase_options.dart
 fi
 
+# Firebase iOS config file expected by Xcode project.
+# The repository ignores `ios/Runner/GoogleService-Info.plist`, so we must
+# recreate it from an Xcode Cloud secret during CI.
+GOOGLE_PLIST_PATH="ios/Runner/GoogleService-Info.plist"
+if [ ! -s "$GOOGLE_PLIST_PATH" ]; then
+  if [ -n "$GOOGLE_SERVICE_INFO_PLIST_B64" ]; then
+    mkdir -p "$(dirname \"$GOOGLE_PLIST_PATH\")"
+    printf "%s" "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 -D > "$GOOGLE_PLIST_PATH"
+  else
+    echo "GoogleService-Info.plist missing at $GOOGLE_PLIST_PATH"
+    echo "Set Xcode Cloud secret: GOOGLE_SERVICE_INFO_PLIST_B64"
+    exit 1
+  fi
+fi
+
 # Install Flutter dependencies.
 flutter pub get
 
