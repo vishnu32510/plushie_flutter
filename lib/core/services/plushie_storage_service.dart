@@ -34,10 +34,7 @@ class PlushieStorageService extends Services {
       // Migration: first run after index support, seed index from current files.
       final entities = await dir.list().toList();
       final files =
-          entities
-              .whereType<File>()
-              .where((f) => !_isIndexFile(f))
-              .toList()
+          entities.whereType<File>().where((f) => !_isIndexFile(f)).toList()
             ..sort((a, b) => b.path.compareTo(a.path));
       await _writeIndex(files.map((f) => f.path).toList());
       return files;

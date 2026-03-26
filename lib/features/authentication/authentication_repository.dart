@@ -155,7 +155,10 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
     try {
       // Remove per-user usage data if present.
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .delete();
     } catch (_) {
       // Ignore missing docs; continue account deletion.
     }
@@ -326,10 +329,7 @@ class PasswordResetFailure implements Exception {
 class DeleteAccountFailure implements Exception {
   const DeleteAccountFailure([this.message = 'Could not delete account.']);
 
-  factory DeleteAccountFailure.fromCode(
-    String code, {
-    String? messageString,
-  }) {
+  factory DeleteAccountFailure.fromCode(String code, {String? messageString}) {
     switch (code) {
       case 'requires-recent-login':
         return const DeleteAccountFailure(

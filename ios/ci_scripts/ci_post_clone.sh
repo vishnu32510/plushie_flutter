@@ -16,9 +16,14 @@ flutter precache --ios
 [ -n "$ENV_FILE" ] || { echo "ENV_FILE is missing"; exit 1; }
 printf "%s" "$ENV_FILE" > .env
 
-# Create firebase_options.dart from Xcode Cloud environment variable.
-[ -n "$FIREBASE_OPTIONS" ] || { echo "FIREBASE_OPTIONS is missing"; exit 1; }
-printf "%s" "$FIREBASE_OPTIONS" > lib/firebase_options.dart
+# Create firebase_options.dart from Xcode Cloud environment secrets.
+# Prefer the base64 version to avoid truncation/newline issues with multiline secrets.
+if [ -n "$FIREBASE_OPTIONS_B64" ]; then
+  printf "%s" "$FIREBASE_OPTIONS_B64" | base64 -D > lib/firebase_options.dart
+else
+  [ -n "$FIREBASE_OPTIONS" ] || { echo "FIREBASE_OPTIONS is missing"; exit 1; }
+  printf "%s" "$FIREBASE_OPTIONS" > lib/firebase_options.dart
+fi
 
 # Install Flutter dependencies.
 flutter pub get
