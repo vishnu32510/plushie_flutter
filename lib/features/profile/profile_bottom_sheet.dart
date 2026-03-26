@@ -202,6 +202,7 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
   Navigator.pop(context);
   final rootNavigator = Navigator.of(context, rootNavigator: true);
   var loadingShown = false;
+  var requiresReauth = false;
   showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -219,12 +220,47 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
     message = 'Account deleted. Local gallery list cleared.';
   } on DeleteAccountFailure catch (e) {
     message = e.message;
+    // Firebase often requires a recent login before deleting an account.
+    requiresReauth = e.message.toLowerCase().contains('sign in again');
   } catch (_) {
     message = 'Could not delete account. Please try again.';
   } finally {
     if (loadingShown && rootNavigator.mounted && rootNavigator.canPop()) {
       rootNavigator.pop();
     }
+  }
+
+  if (requiresReauth && context.mounted) {
+    showDialog<void>(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Sign in again required'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<AuthenticationBloc>().add(
+                        const LogoutRequested(),
+                      );
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (_) => const LoginBottomSheet(),
+                  );
+                },
+                child: const Text('Sign in again'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+            ],
+          ),
+    );
+    return;
   }
 
   final snackBar = SnackBar(content: Text(message));
