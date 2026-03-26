@@ -6,6 +6,8 @@ import 'package:plushie_yourself/features/authentication/authentication_bloc/aut
 import 'package:plushie_yourself/features/authentication/authentication_enums.dart';
 import 'package:plushie_yourself/features/authentication/login_bloc/login_bloc.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
+import 'package:plushie_yourself/core/di/injection.dart';
+import 'package:plushie_yourself/core/services/toast_service.dart';
 
 class LoginBottomSheet extends StatefulWidget {
   const LoginBottomSheet({super.key});
@@ -39,16 +41,7 @@ class _LoginBottomSheetState extends State<LoginBottomSheet> {
         listener: (context, state) {
           if (state.status == FormzSubmissionStatus.failure &&
               state.errorMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage!),
-                backgroundColor: const Color(0xFFB85C4A),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            );
+            getIt<IToastService>().showError(state.errorMessage!);
           }
         },
         child: Container(

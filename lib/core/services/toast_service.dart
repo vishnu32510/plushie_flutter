@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:plushie_yourself/core/services/services.dart';
 
-class ToastService extends Services {
-  static GlobalKey<ScaffoldMessengerState>? _messengerKey;
+abstract class IToastService {
+  void showSuccess(String message);
+  void showError(String message);
+  void showInfo(String message);
+  void showWarning(String message);
+}
 
-  static void initialize(GlobalKey<ScaffoldMessengerState> messengerKey) {
-    _messengerKey = messengerKey;
-  }
+class ToastService extends Services implements IToastService {
+  final GlobalKey<ScaffoldMessengerState> _messengerKey;
 
-  static void showSuccess(String message) {
+  ToastService({required GlobalKey<ScaffoldMessengerState> messengerKey})
+    : _messengerKey = messengerKey;
+
+  @override
+  void showSuccess(String message) {
     _showToast(
       message: message,
       backgroundColor: const Color(0xFF6B8E5A),
@@ -16,7 +23,8 @@ class ToastService extends Services {
     );
   }
 
-  static void showError(String message) {
+  @override
+  void showError(String message) {
     _showToast(
       message: message,
       backgroundColor: const Color(0xFFB85C4A),
@@ -24,7 +32,8 @@ class ToastService extends Services {
     );
   }
 
-  static void showInfo(String message) {
+  @override
+  void showInfo(String message) {
     _showToast(
       message: message,
       backgroundColor: const Color(0xFF4A7FA5),
@@ -32,7 +41,8 @@ class ToastService extends Services {
     );
   }
 
-  static void showWarning(String message) {
+  @override
+  void showWarning(String message) {
     _showToast(
       message: message,
       backgroundColor: const Color(0xFFD4A047),
@@ -40,13 +50,13 @@ class ToastService extends Services {
     );
   }
 
-  static void _showToast({
+  void _showToast({
     required String message,
     required Color backgroundColor,
     required IconData icon,
     Duration duration = const Duration(seconds: 3),
   }) {
-    _messengerKey?.currentState?.showSnackBar(
+    _messengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Row(
           children: [

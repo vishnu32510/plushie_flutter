@@ -16,11 +16,10 @@ void setupDI() {
     () => OpenAIService(apiKey: apiKey),
   );
 
-  // ToastService — initialize with scaffold messenger key
-  getIt.registerLazySingleton<ToastService>(() {
-    ToastService.initialize(scaffoldMessengerKey);
-    return ToastService();
-  });
+  // ToastService — singleton behind interface
+  getIt.registerLazySingleton<IToastService>(
+    () => ToastService(messengerKey: scaffoldMessengerKey),
+  );
 
   // BLoCs — factories (new instance each time, keeps state fresh)
   getIt.registerFactory<PlushieBloc>(

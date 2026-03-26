@@ -5,6 +5,14 @@ abstract class AppConstants {
   static const String openAiResponsesUrl =
       'https://api.openai.com/v1/responses';
 
+  // Legal & support URLs (GitHub Pages)
+  static const String privacyPolicyUrl =
+      'https://vishnu32510.github.io/plushie_flutter/privacy.html';
+  static const String termsUrl =
+      'https://vishnu32510.github.io/plushie_flutter/terms.html';
+  static const String supportUrl =
+      'https://vishnu32510.github.io/plushie_flutter/support.html';
+
   // Prompt sent to Responses API (single call — keeps real background)
   static const String plushiePrompt =
       'Transform the subject or image into an adorable plushie-style form with soft textures and rounded proportions. '

@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
+import 'package:plushie_yourself/core/di/injection.dart';
+import 'package:plushie_yourself/core/services/toast_service.dart';
 
 import '../authentication_bloc/authentication_bloc.dart';
 import '../authentication_enums.dart';
@@ -43,16 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state.status == FormzSubmissionStatus.failure &&
               state.errorMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage!),
-                backgroundColor: const Color(0xFFB85C4A),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            );
+            getIt<IToastService>().showError(state.errorMessage!);
           }
         },
         child: Scaffold(

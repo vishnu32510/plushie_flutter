@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plushie_yourself/core/config/global_keys.dart';
+import 'package:plushie_yourself/core/di/injection.dart';
 import 'package:plushie_yourself/core/services/plushie_storage_service.dart';
+import 'package:plushie_yourself/core/services/toast_service.dart';
+import 'package:plushie_yourself/core/utils/app_constants.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
 import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
@@ -139,27 +141,26 @@ class ProfileBottomSheet extends StatelessWidget {
               _MenuItem(
                 icon: Icons.privacy_tip_outlined,
                 label: 'Privacy Policy',
-                onTap:
-                    () => _openUrl(
-                      context,
-                      'https://plushieyourself.com/privacy',
-                    ),
+                onTap: () => _openUrl(
+                  context,
+                  AppConstants.privacyPolicyUrl,
+                ),
               ),
               _MenuItem(
                 icon: Icons.description_outlined,
                 label: 'Terms of Service',
-                onTap:
-                    () =>
-                        _openUrl(context, 'https://plushieyourself.com/terms'),
+                onTap: () => _openUrl(
+                  context,
+                  AppConstants.termsUrl,
+                ),
               ),
               _MenuItem(
                 icon: Icons.help_outline_rounded,
                 label: 'Support',
-                onTap:
-                    () => _openUrl(
-                      context,
-                      'https://plushieyourself.com/support',
-                    ),
+                onTap: () => _openUrl(
+                  context,
+                  AppConstants.supportUrl,
+                ),
               ),
             ],
           ),
@@ -203,6 +204,7 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
   final rootNavigator = Navigator.of(context, rootNavigator: true);
   var loadingShown = false;
   var requiresReauth = false;
+  var success = false;
   showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -218,6 +220,7 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
     await context.read<FirebaseAuthenticationRepository>().deleteAccount();
     await PlushieStorageService.clearVisibleEntries();
     message = 'Account deleted. Local gallery list cleared.';
+    success = true;
   } on DeleteAccountFailure catch (e) {
     message = e.message;
     // Firebase often requires a recent login before deleting an account.
@@ -263,11 +266,12 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
     return;
   }
 
-  final snackBar = SnackBar(content: Text(message));
   if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  } else {
-    scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
+    if (success) {
+      getIt<IToastService>().showSuccess(message);
+    } else {
+      getIt<IToastService>().showError(message);
+    }
   }
 }
 

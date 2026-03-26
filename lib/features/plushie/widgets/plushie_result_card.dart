@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:plushie_yourself/core/services/media_service.dart';
 import 'package:plushie_yourself/core/services/plushie_storage_service.dart';
+import 'package:plushie_yourself/core/services/toast_service.dart';
+import 'package:plushie_yourself/core/di/injection.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
 
 class PlushieResultCard extends StatefulWidget {
@@ -41,9 +43,11 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
     setState(() => _saving = true);
     final error = await MediaService.saveToGallery(bytes);
     if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error ?? 'Saved to gallery!')));
+      if (error != null) {
+        getIt<IToastService>().showError(error);
+      } else {
+        getIt<IToastService>().showSuccess('Saved to gallery!');
+      }
       setState(() => _saving = false);
     }
   }
@@ -57,11 +61,21 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
       text: '🧸 Check out my plushie! Made with Plushify Me',
     );
     if (mounted) {
-      if (error != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
-      }
+      if (error != null) getIt<IToastService>().showError(error);
+      setState(() => _sharing = false);
+    }
+  }
+
+  Future<void> _shareToWhatsApp() async {
+    final bytes = widget.resultBytes;
+    if (bytes == null) return;
+    setState(() => _sharing = true);
+
+    // Keep caption empty so WhatsApp prefers attaching the image.
+    final error = await MediaService.shareImage(bytes, text: '');
+
+    if (mounted) {
+      if (error != null) getIt<IToastService>().showError(error);
       setState(() => _sharing = false);
     }
   }
@@ -298,7 +312,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           const SizedBox(width: 10),
           _CircleAction(
             color: const Color(0xFF25D366),
-            onTap: _sharing ? null : _share,
+            onTap: _sharing ? null : _shareToWhatsApp,
             child: const Text(
               'WA',
               style: TextStyle(

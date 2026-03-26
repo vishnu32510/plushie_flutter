@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
+import 'package:plushie_yourself/core/di/injection.dart';
 import 'package:plushie_yourself/core/services/usage_service.dart';
 import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
@@ -68,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       setState(() => _selectedImage = imageFile);
     } catch (e) {
-      ToastService.showError('Could not pick image. Please try again.');
+      getIt<IToastService>().showError(
+        'Could not pick image. Please try again.',
+      );
     }
   }
 
@@ -153,9 +156,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool get _isLoggedIn {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) return false;
+
     final authState = context.read<AuthenticationBloc>().state;
-    // Treat "unknown" (Firebase still restoring session) as logged in to avoid
-    // flashing the login sheet on restart when the user is already signed in.
+    // Firebase may still be restoring state: only treat "unknown" as logged-in
+    // if Firebase already has a current user.
     return authState.status != AuthenticationStatus.unauthenticated;
   }
 
@@ -205,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
           );
         } else if (state is PlushieError) {
-          ToastService.showError(state.message);
+          getIt<IToastService>().showError(state.message);
         }
       },
       child: Scaffold(
