@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plushie_yourself/core/config/global_keys.dart';
 import 'package:plushie_yourself/core/services/plushie_storage_service.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
@@ -199,6 +200,8 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
   if (shouldDelete != true || !context.mounted) return;
 
   Navigator.pop(context);
+  final rootNavigator = Navigator.of(context, rootNavigator: true);
+  var loadingShown = false;
   showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -207,27 +210,28 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
           child: CircularProgressIndicator(color: AppColors.warmAmber),
         ),
   );
+  loadingShown = true;
 
+  String message;
   try {
     await context.read<FirebaseAuthenticationRepository>().deleteAccount();
     await PlushieStorageService.clearVisibleEntries();
-    if (!context.mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Account deleted. Local gallery list cleared.')),
-    );
+    message = 'Account deleted. Local gallery list cleared.';
   } on DeleteAccountFailure catch (e) {
-    if (!context.mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(e.message)));
+    message = e.message;
   } catch (_) {
-    if (!context.mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Could not delete account. Please try again.')),
-    );
+    message = 'Could not delete account. Please try again.';
+  } finally {
+    if (loadingShown && rootNavigator.mounted && rootNavigator.canPop()) {
+      rootNavigator.pop();
+    }
+  }
+
+  final snackBar = SnackBar(content: Text(message));
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  } else {
+    scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
   }
 }
 
