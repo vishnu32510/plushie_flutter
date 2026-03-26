@@ -13,10 +13,12 @@ export PATH="$PATH:$HOME/flutter/bin"
 flutter precache --ios
 
 # Create .env file from Xcode Cloud environment variable.
-echo "$ENV_FILE" > .env
+[ -n "$ENV_FILE" ] || { echo "ENV_FILE is missing"; exit 1; }
+printf "%s" "$ENV_FILE" > .env
 
 # Create firebase_options.dart from Xcode Cloud environment variable.
-echo "$FIREBASE_OPTIONS" > lib/firebase_options.dart
+[ -n "$FIREBASE_OPTIONS" ] || { echo "FIREBASE_OPTIONS is missing"; exit 1; }
+printf "%s" "$FIREBASE_OPTIONS" > lib/firebase_options.dart
 
 # Install Flutter dependencies.
 flutter pub get
