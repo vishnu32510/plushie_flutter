@@ -4,6 +4,7 @@ import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
 import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/theme/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileBottomSheet extends StatelessWidget {
   const ProfileBottomSheet({super.key});
@@ -161,13 +162,7 @@ class ProfileBottomSheet extends StatelessWidget {
 
 void _openUrl(BuildContext context, String url) {
   Navigator.pop(context);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(url),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-  );
+  launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
 }
 
 class _MenuItem extends StatelessWidget {
