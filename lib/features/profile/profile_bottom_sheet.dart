@@ -166,7 +166,7 @@ class ProfileBottomSheet extends StatelessWidget {
 
 void _openUrl(BuildContext context, String url) {
   Navigator.pop(context);
-  launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView);
 }
 
 Future<void> _handleDeleteAccount(BuildContext context) async {
