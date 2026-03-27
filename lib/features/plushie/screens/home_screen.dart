@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plushie_yourself/core/services/toast_service.dart';
 import 'package:plushie_yourself/core/di/injection.dart';
 import 'package:plushie_yourself/core/services/usage_service.dart';
-import 'package:plushie_yourself/features/paywall/paywall_screen.dart';
 import 'package:plushie_yourself/features/authentication/authentication.dart';
 import 'package:plushie_yourself/features/authentication/widgets/login_bottom_sheet.dart';
 import 'package:plushie_yourself/features/plushie/bloc/plushie_bloc.dart';
@@ -181,8 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid != null && !await UsageService.canGenerate(uid)) {
-      if (!mounted) return;
-      PaywallScreen.show(context);
+      getIt<IToastService>().showError(
+        'You’ve reached your weekly limit (10). Please try again next week.',
+      );
       return;
     }
     if (mounted) {

@@ -124,19 +124,22 @@ class ProfileBottomSheet extends StatelessWidget {
               Divider(color: AppColors.subtleGray.withValues(alpha: 0.6)),
               const SizedBox(height: 4),
 
-              _MenuItem(
-                icon: Icons.star_rounded,
-                label: 'Manage Subscription',
-                color: AppColors.warmAmber,
-                onTap: () {
-                  Navigator.pop(context);
-                  PaywallScreen.show(context);
-                },
+              // Temporarily hidden (app is free for all).
+              Visibility(
+                visible: false,
+                maintainState: true,
+                maintainAnimation: true,
+                maintainSize: false,
+                child: _MenuItem(
+                  icon: Icons.star_rounded,
+                  label: 'Manage Subscription',
+                  color: AppColors.warmAmber,
+                  onTap: () {
+                    Navigator.pop(context);
+                    PaywallScreen.show(context);
+                  },
+                ),
               ),
-
-              const SizedBox(height: 4),
-              Divider(color: AppColors.subtleGray.withValues(alpha: 0.6)),
-              const SizedBox(height: 4),
 
               _MenuItem(
                 icon: Icons.privacy_tip_outlined,

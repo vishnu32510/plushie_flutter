@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plushie_yourself/core/services/services.dart';
 
 class UsageService extends Services {
-  static const int _freeWeeklyLimit = 5;
-  static const int _subscribedWeeklyLimit = 100;
+  static const int _weeklyLimit = 10;
 
   static CollectionReference<Map<String, dynamic>> get _col =>
       FirebaseFirestore.instance.collection('users');
@@ -38,12 +37,12 @@ class UsageService extends Services {
 
     // Reset if new week
     final count = data.weekKey == currentWeek ? data.count : 0;
-    final limit = data.isSubscribed ? _subscribedWeeklyLimit : _freeWeeklyLimit;
+    final limit = _weeklyLimit;
 
     return UsageStatus(
       count: count,
       limit: limit,
-      isSubscribed: data.isSubscribed,
+      isSubscribed: false,
       canGenerate: count < limit,
     );
   }
@@ -97,7 +96,5 @@ class UsageStatus {
 
   int get remaining => (limit - count).clamp(0, limit);
 
-  /// Display string — subscribed users see "Unlimited"
-  String get remainingLabel =>
-      isSubscribed ? 'Unlimited' : '$remaining free this week';
+  String get remainingLabel => '$remaining left this week';
 }
