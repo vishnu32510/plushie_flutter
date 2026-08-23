@@ -3,10 +3,16 @@
 # Fail this script if any subcommand fails.
 set -e
 
-cd $CI_PRIMARY_REPOSITORY_PATH
+cd "$CI_PRIMARY_REPOSITORY_PATH"
 
-# Install Flutter using git.
-git clone https://github.com/flutter/flutter.git --depth 1 -b stable $HOME/flutter
+# Install Flutter using git with pinned version if available.
+if [ -f "flutter-version.txt" ]; then
+  FLUTTER_VERSION=$(cat flutter-version.txt | tr -d '[:space:]')
+  git clone https://github.com/flutter/flutter.git --depth 1 -b "$FLUTTER_VERSION" "$HOME/flutter"
+else
+  git clone https://github.com/flutter/flutter.git --depth 1 -b stable "$HOME/flutter"
+fi
+
 export PATH="$PATH:$HOME/flutter/bin"
 
 # Install Flutter artifacts for iOS.
@@ -31,7 +37,7 @@ fi
 GOOGLE_PLIST_PATH="ios/Runner/GoogleService-Info.plist"
 if [ ! -s "$GOOGLE_PLIST_PATH" ]; then
   if [ -n "$GOOGLE_SERVICE_INFO_PLIST_B64" ]; then
-    mkdir -p "$(dirname \"$GOOGLE_PLIST_PATH\")"
+    mkdir -p "$(dirname "$GOOGLE_PLIST_PATH")"
     printf "%s" "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 -D > "$GOOGLE_PLIST_PATH"
   else
     echo "GoogleService-Info.plist missing at $GOOGLE_PLIST_PATH"
@@ -42,13 +48,6 @@ fi
 
 # Install Flutter dependencies.
 flutter pub get
-
-# Install CocoaPods using Homebrew.
-HOMEBREW_NO_AUTO_UPDATE=1
-brew install cocoapods
-
-# Install CocoaPods dependencies.
-cd ios && pod install
 
 # Debug checks for CI artifacts written from secrets.
 cd "$CI_PRIMARY_REPOSITORY_PATH"

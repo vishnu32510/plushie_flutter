@@ -2,17 +2,17 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:plushie_yourself/features/plushie/repository/openai_service.dart';
+import 'package:plushie_yourself/features/plushie/repository/plushie_service_interface.dart';
 
 part 'plushie_event.dart';
 part 'plushie_state.dart';
 
 class PlushieBloc extends Bloc<PlushieEvent, PlushieState> {
-  final OpenAIService _openAIService;
+  final IPlushieService _plushieService;
 
-  PlushieBloc({required OpenAIService openAIService})
-    : _openAIService = openAIService,
-      super(const PlushieInitial()) {
+  PlushieBloc({
+    required this._plushieService,
+  }) : super(const PlushieInitial()) {
     on<TransformImageEvent>(_onTransformImage);
     on<ResetPlushieEvent>(_onReset);
   }
@@ -31,7 +31,7 @@ class PlushieBloc extends Bloc<PlushieEvent, PlushieState> {
       return;
     }
 
-    final result = await _openAIService.transformToPlushie(
+    final result = await _plushieService.transformToPlushie(
       imageFile: event.imageFile,
     );
 

@@ -14,6 +14,7 @@ enum ServiceError {
   timeoutError,
   socketError,
   authError,
+  rateLimitError,
 }
 
 abstract class Services {}
@@ -32,19 +33,22 @@ class HttpServices extends Services {
 
   Future postMethod(
     String url,
-    var body, {
+    dynamic body, {
     Duration timeout = const Duration(seconds: 60),
+    Map<String, String>? headers,
   }) async {
     var bo = convert.jsonEncode(body);
     try {
+      final defaultHeaders = <String, String>{
+        if (apiKey.isNotEmpty) 'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+      final requestHeaders = headers ?? defaultHeaders;
       var data = await http
           .post(
             Uri.parse(url),
             body: bo,
-            headers: <String, String>{
-              'Authorization': 'Bearer $apiKey',
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
+            headers: requestHeaders,
           )
           .timeout(timeout);
       debugPrint('[HTTP] ${data.statusCode} $url');
@@ -53,11 +57,13 @@ class HttpServices extends Services {
       );
       if (data.statusCode == 200 || data.statusCode == 201) {
         return convert.jsonDecode(data.body);
+      } else if (data.statusCode == 429) {
+        return ServiceError.rateLimitError;
       } else if (data.statusCode == 400 || data.statusCode == 404) {
         return ServiceError.clientError;
-      } else if (data.statusCode == 403) {
+      } else if (data.statusCode == 401 || data.statusCode == 403) {
         return ServiceError.authError;
-      } else if (data.statusCode == 500) {
+      } else if (data.statusCode == 500 || data.statusCode == 503) {
         return ServiceError.serverError;
       } else {
         return ServiceError.unknownResponseError;

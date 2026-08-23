@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-enum ThemeType { darkMode, lightMode, system }
+enum ThemeType {
+  darkMode,
+  lightMode,
+  system,
+  amoledMode,
+}
 
 extension ThemeTypeDetails on ThemeType {
   String get themeName {
@@ -11,6 +16,8 @@ extension ThemeTypeDetails on ThemeType {
         return "Light";
       case ThemeType.system:
         return "System";
+      case ThemeType.amoledMode:
+        return "Amoled";
     }
   }
 
@@ -22,6 +29,8 @@ extension ThemeTypeDetails on ThemeType {
         return Icons.light_mode;
       case ThemeType.system:
         return Icons.sync_sharp;
+      case ThemeType.amoledMode:
+        return Icons.brightness_3_rounded;
     }
   }
 }

@@ -11,8 +11,7 @@ abstract class IToastService {
 class ToastService extends Services implements IToastService {
   final GlobalKey<ScaffoldMessengerState> _messengerKey;
 
-  ToastService({required GlobalKey<ScaffoldMessengerState> messengerKey})
-    : _messengerKey = messengerKey;
+  ToastService({required this._messengerKey});
 
   @override
   void showSuccess(String message) {

@@ -57,3 +57,17 @@ class SystemThemeState extends ThemeState {
     themeEventType: ThemeType.system,
   );
 }
+
+class AmoledThemeState extends ThemeState {
+  const AmoledThemeState({
+    required super.themeData,
+    required super.themeMode,
+    required super.themeEventType,
+  });
+
+  static ThemeState get amoledTheme => ThemeState(
+    themeData: PlushieTheme.amoled,
+    themeMode: ThemeMode.dark,
+    themeEventType: ThemeType.amoledMode,
+  );
+}

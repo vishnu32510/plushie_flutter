@@ -5,6 +5,14 @@ abstract class AppConstants {
   static const String openAiResponsesUrl =
       'https://api.openai.com/v1/responses';
 
+  // Google AI Studio (Gemini & Imagen) endpoints
+  static const String geminiFlashModel = 'gemini-3.6-flash';
+  static const String geminiImageModel = 'gemini-2.5-flash-image';
+  static const String geminiFlashUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models/$geminiFlashModel:generateContent';
+  static const String geminiImageUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models/$geminiImageModel:generateContent';
+
   // Legal & support URLs (GitHub Pages)
   static const String privacyPolicyUrl =
       'https://vishnu32510.github.io/plushie_flutter/privacy.html';

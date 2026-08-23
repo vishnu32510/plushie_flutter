@@ -7,6 +7,13 @@ extension MediaQueryExtension on BuildContext {
   double get height => _size.height;
 }
 
+extension ThemeContextExtension on BuildContext {
+  ThemeData get theme => Theme.of(this);
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  TextTheme get textTheme => Theme.of(this).textTheme;
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+}
+
 extension DeviceTypeExtension on DeviceType {
   int getMinWidth() {
     switch (this) {
@@ -34,7 +41,7 @@ extension DeviceTypeExtension on DeviceType {
       case DeviceType.largeScreenDesktop:
         return 1200;
       case DeviceType.extraLargeTV:
-        return 3840;
+        return 3840; // any number more than 1200
     }
   }
 }

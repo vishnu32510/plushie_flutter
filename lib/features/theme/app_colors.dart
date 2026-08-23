@@ -90,4 +90,16 @@ class PlushieTheme {
     ),
     scaffoldBackgroundColor: const Color(0xFF1A1208),
   );
+
+  static ThemeData get amoled => ThemeData(
+    useMaterial3: true,
+    colorScheme: const ColorScheme.dark(
+      primary: Color(0xFFD4A047),
+      onPrimary: Colors.white,
+      secondary: Color(0xFF8B6340),
+      surface: Colors.black,
+      onSurface: Colors.white,
+    ),
+    scaffoldBackgroundColor: Colors.black,
+  );
 }

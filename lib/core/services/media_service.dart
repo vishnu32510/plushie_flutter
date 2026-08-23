@@ -28,9 +28,12 @@ class MediaService extends Services {
       final dir = await getTemporaryDirectory();
       final path = '${DateTime.now().millisecondsSinceEpoch}.png';
       await File('${dir.path}/$path').writeAsBytes(bytes);
-      await Share.shareXFiles([
-        XFile('${dir.path}/$path', mimeType: 'image/png'),
-      ], text: text);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile('${dir.path}/$path', mimeType: 'image/png')],
+          text: text,
+        ),
+      );
       return null;
     } catch (_) {
       return 'Could not share. Please try again.';

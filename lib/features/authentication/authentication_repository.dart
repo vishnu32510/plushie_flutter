@@ -1,12 +1,16 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
+import 'cache.dart';
+import 'user.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:flutter/foundation.dart'
+    show debugPrint, defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import 'cache.dart';
-import 'user.dart';
+import '../../firebase_options.dart';
 
 abstract class AuthenticationRepository {}
 
@@ -14,14 +18,21 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
   FirebaseAuthenticationRepository({
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
-    GoogleSignIn? googleSignIn,
   }) : _cache = cache ?? CacheClient(),
-       _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-       _googleSignIn = googleSignIn ?? GoogleSignIn();
+       _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
 
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
-  final GoogleSignIn _googleSignIn;
+
+  /// Must be called once before any Google sign-in calls.
+  Future<void> initializeGoogleSignIn() async {
+    await GoogleSignIn.instance.initialize(
+      serverClientId:
+          !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+              ? DefaultFirebaseOptions.googleWebClientId
+              : null,
+    );
+  }
 
   static const userCacheKey = '__user_cache_key__';
 
@@ -37,10 +48,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     return _cache.read<User>(key: userCacheKey) ?? User.empty;
   }
 
-  Future<void> signUpWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> signUp({required String email, required String password}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -56,30 +64,65 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     }
   }
 
+  Future<void> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) => signUp(email: email, password: password);
+
   Future<void> logInWithGoogle() async {
     try {
-      late final firebase_auth.AuthCredential credential;
       if (kIsWeb) {
-        final googleProvider = firebase_auth.OAuthProvider('google.com');
-        final userCredential = await _firebaseAuth.signInWithPopup(
-          googleProvider,
-        );
-        credential = userCredential.credential!;
-      } else {
-        final googleUser = await _googleSignIn.signIn();
-        final googleAuth = await googleUser!.authentication;
-        credential = firebase_auth.OAuthProvider('google.com').credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
+        final googleProvider = firebase_auth.GoogleAuthProvider();
+        await _firebaseAuth.signInWithPopup(googleProvider);
+        return;
+      }
+
+      // google_sign_in v7: authenticate() replaces signIn().
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken == null) {
+        throw const LogInWithGoogleFailure(
+          'Google sign-in failed. Check Firebase SHA-1 setup for this build.',
         );
       }
+
+      // Passing idToken is sufficient for Firebase sign-in.
+      final credential = firebase_auth.GoogleAuthProvider.credential(
+        idToken: idToken,
+      );
       await _firebaseAuth.signInWithCredential(credential);
+    } on LogInWithGoogleCancelled {
+      rethrow;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithGoogleFailure.fromCode(e.code, messageString: e.message);
+    } on PlatformException catch (e) {
+      debugPrint('Google sign-in platform error: ${e.code} ${e.message}');
+      throw LogInWithGoogleFailure(_googleSignInFailureMessage(e));
     } catch (e) {
-      debugPrint(e.toString());
-      throw const LogInWithGoogleFailure();
+      debugPrint('Google sign-in error: $e');
+      throw LogInWithGoogleFailure(_googleSignInFailureMessage(e));
     }
+  }
+
+  String _googleSignInFailureMessage(Object error) {
+    if (error is LogInWithGoogleFailure) {
+      return error.message;
+    }
+    if (error is PlatformException) {
+      final code = error.code;
+      if (code == 'sign_in_failed' || code == 'network_error') {
+        return 'Google sign-in failed. Check your network and try again.';
+      }
+    }
+    final text = error.toString();
+    if (text.contains('signInWithCredential') ||
+        text.contains('ApiException: 10') ||
+        text.contains('invalid-credential')) {
+      return 'Google sign-in failed. Add your app SHA-1 in Firebase Console, '
+          'download the new google-services.json, then rebuild and reinstall.';
+    }
+    return 'Google sign-in failed. Please try again.';
   }
 
   Future<void> logInWithApple() async {
@@ -133,7 +176,10 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   Future<void> logOut() async {
     try {
-      await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
+      await Future.wait([
+        _firebaseAuth.signOut(),
+        GoogleSignIn.instance.signOut(),
+      ]);
     } catch (_) {
       throw LogOutFailure();
     }
@@ -154,14 +200,11 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     }
 
     try {
-      // Remove per-user usage data if present.
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .delete();
-    } catch (_) {
-      // Ignore missing docs; continue account deletion.
-    }
+    } catch (_) {}
 
     try {
       await user.delete();
@@ -177,8 +220,6 @@ extension on firebase_auth.User {
   User get toUser =>
       User(id: uid, email: email, name: displayName, photo: photoURL);
 }
-
-// ── Failure classes ───────────────────────────────────────────────────────────
 
 class SignUpWithEmailAndPasswordFailure implements Exception {
   const SignUpWithEmailAndPasswordFailure([
@@ -260,6 +301,10 @@ class LogInWithEmailAndPasswordFailure implements Exception {
   }
 
   final String message;
+}
+
+class LogInWithGoogleCancelled implements Exception {
+  const LogInWithGoogleCancelled();
 }
 
 class LogInWithGoogleFailure implements Exception {
