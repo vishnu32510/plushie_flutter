@@ -196,7 +196,8 @@ class _PlushieThumbnail extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12.5),
-          child: Image.file(file, fit: BoxFit.cover),
+          // Decode at lower resolution to save memory for thumbnail
+          child: Image.file(file, fit: BoxFit.cover, cacheWidth: 300),
         ),
       ),
     );
