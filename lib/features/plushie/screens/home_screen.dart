@@ -370,7 +370,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
               // Decode at lower resolution to save memory for main preview
-              child: Image.file(_selectedImage!, fit: BoxFit.cover, cacheWidth: 1200),
+              child: Image.file(
+                _selectedImage!,
+                fit: BoxFit.cover,
+                cacheWidth: 1200,
+              ),
             ),
           ),
           Positioned(
@@ -510,7 +514,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 // Decode at lower resolution to save memory for bottom bar preview
-                child: Image.file(_selectedImage!, fit: BoxFit.cover, cacheWidth: 150),
+                child: Image.file(
+                  _selectedImage!,
+                  fit: BoxFit.cover,
+                  cacheWidth: 150,
+                ),
               ),
             )
           else
