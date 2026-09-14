@@ -295,38 +295,44 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Row(
           children: [
-            GestureDetector(
-              onTap: _openGallery,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.warmCream,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
-                ),
-                child: const Icon(
-                  Icons.photo_library_rounded,
-                  color: AppColors.warmBrown,
-                  size: 20,
+            Tooltip(
+              message: 'Open Gallery',
+              child: GestureDetector(
+                onTap: _openGallery,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.warmCream,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                  ),
+                  child: const Icon(
+                    Icons.photo_library_rounded,
+                    color: AppColors.warmBrown,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            GestureDetector(
-              onTap: _openProfile,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.warmCream,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
-                ),
-                child: const Icon(
-                  Icons.person_rounded,
-                  color: AppColors.warmBrown,
-                  size: 20,
+            Tooltip(
+              message: 'Open Profile',
+              child: GestureDetector(
+                onTap: _openProfile,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.warmCream,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    color: AppColors.warmBrown,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
@@ -369,15 +375,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Positioned(
             top: 8,
             right: 8,
-            child: GestureDetector(
-              onTap: () => setState(() => _selectedImage = null),
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.warmBrown,
-                  shape: BoxShape.circle,
+            child: Tooltip(
+              message: 'Remove Image',
+              child: GestureDetector(
+                onTap: () => setState(() => _selectedImage = null),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.warmBrown,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 16),
                 ),
-                child: const Icon(Icons.close, color: Colors.white, size: 16),
               ),
             ),
           ),
@@ -503,20 +512,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             )
           else
-            GestureDetector(
-              onTap: _showImageSourceSheet,
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.warmCream,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
-                ),
-                child: Icon(
-                  Icons.image_rounded,
-                  color: AppColors.warmBrownLight,
-                  size: 24,
+            Tooltip(
+              message: 'Choose Image',
+              child: GestureDetector(
+                onTap: _showImageSourceSheet,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.warmCream,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                  ),
+                  child: Icon(
+                    Icons.image_rounded,
+                    color: AppColors.warmBrownLight,
+                    size: 24,
+                  ),
                 ),
               ),
             ),
@@ -544,25 +556,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          GestureDetector(
-            onTap: _selectedImage != null ? _transform : _showImageSourceSheet,
-            child: Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color:
-                    _selectedImage != null
-                        ? AppColors.warmBrown
-                        : AppColors.subtleGray,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.arrow_upward_rounded,
-                color:
-                    _selectedImage != null
-                        ? Colors.white
-                        : AppColors.warmBrownLight,
-                size: 22,
+          Tooltip(
+            message: _selectedImage != null ? 'Create Plushie' : 'Upload Image',
+            child: GestureDetector(
+              onTap:
+                  _selectedImage != null ? _transform : _showImageSourceSheet,
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color:
+                      _selectedImage != null
+                          ? AppColors.warmBrown
+                          : AppColors.subtleGray,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.arrow_upward_rounded,
+                  color:
+                      _selectedImage != null
+                          ? Colors.white
+                          : AppColors.warmBrownLight,
+                  size: 22,
+                ),
               ),
             ),
           ),
