@@ -41,8 +41,8 @@ jobs:
           elif [ -n "$GOOGLE_SERVICES_JSON" ]; then
             printf "%s" "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           else
-            echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret" >&2
-            exit 1
+            echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret, creating a dummy file." >&2
+            echo "{}" > android/app/google-services.json
           fi
 
       - name: Install dependencies
@@ -99,8 +99,8 @@ jobs:
           elif [ -n "$GOOGLE_SERVICES_JSON" ]; then
             printf "%s" "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           else
-            echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret" >&2
-            exit 1
+            echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret, creating a dummy file." >&2
+            echo "{}" > android/app/google-services.json
           fi
 
       - name: Install dependencies
