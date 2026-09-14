@@ -20,6 +20,9 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Create .env file
         run: cp .env.example .env
 
@@ -44,9 +47,6 @@ jobs:
             echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret, creating a dummy file." >&2
             echo "{}" > android/app/google-services.json
           fi
-
-      - name: Install dependencies
-        run: flutter pub get
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -78,6 +78,9 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Create .env file
         run: cp .env.example .env
 
@@ -102,9 +105,6 @@ jobs:
             echo "Missing GOOGLE_SERVICES_JSON_B64 (or GOOGLE_SERVICES_JSON) secret, creating a dummy file." >&2
             echo "{}" > android/app/google-services.json
           fi
-
-      - name: Install dependencies
-        run: flutter pub get
 
       - name: Build debug APK
         run: flutter build apk --debug
