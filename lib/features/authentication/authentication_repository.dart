@@ -27,7 +27,15 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user = firebaseUser == null ? User.empty : User(id: firebaseUser.uid, email: firebaseUser.email, name: firebaseUser.displayName, photo: firebaseUser.photoURL);
+      final user =
+          firebaseUser == null
+              ? User.empty
+              : User(
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                name: firebaseUser.displayName,
+                photo: firebaseUser.photoURL,
+              );
       _cache.write(key: userCacheKey, value: user);
       return user;
     });
