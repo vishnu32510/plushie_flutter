@@ -27,7 +27,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   Stream<User> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user = firebaseUser == null ? User.empty : firebaseUser.toUser;
+      final user = firebaseUser == null ? User.empty : User(id: firebaseUser.uid, email: firebaseUser.email, name: firebaseUser.displayName, photo: firebaseUser.photoURL);
       _cache.write(key: userCacheKey, value: user);
       return user;
     });
@@ -171,11 +171,6 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       throw const DeleteAccountFailure();
     }
   }
-}
-
-extension on firebase_auth.User {
-  User get toUser =>
-      User(id: uid, email: email, name: displayName, photo: photoURL);
 }
 
 // ── Failure classes ───────────────────────────────────────────────────────────
