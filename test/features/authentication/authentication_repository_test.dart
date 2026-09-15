@@ -5,6 +5,7 @@ import 'package:plushie_yourself/features/authentication/authentication_reposito
 import 'package:plushie_yourself/features/authentication/cache.dart';
 
 class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {}
+
 class MockCacheClient extends Mock implements CacheClient {}
 
 void main() {
@@ -27,22 +28,25 @@ void main() {
       const email = 'test@example.com';
       const password = 'password123';
 
-      test('throws SignUpWithEmailAndPasswordFailure when an unknown exception occurs', () async {
-        when(
-          () => firebaseAuth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          ),
-        ).thenThrow(Exception('oops'));
+      test(
+        'throws SignUpWithEmailAndPasswordFailure when an unknown exception occurs',
+        () async {
+          when(
+            () => firebaseAuth.createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            ),
+          ).thenThrow(Exception('oops'));
 
-        expect(
-          () => authenticationRepository.signUpWithEmailAndPassword(
-            email: email,
-            password: password,
-          ),
-          throwsA(isA<SignUpWithEmailAndPasswordFailure>()),
-        );
-      });
+          expect(
+            () => authenticationRepository.signUpWithEmailAndPassword(
+              email: email,
+              password: password,
+            ),
+            throwsA(isA<SignUpWithEmailAndPasswordFailure>()),
+          );
+        },
+      );
     });
   });
 }
