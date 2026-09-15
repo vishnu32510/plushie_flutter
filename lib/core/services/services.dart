@@ -48,9 +48,6 @@ class HttpServices extends Services {
           )
           .timeout(timeout);
       debugPrint('[HTTP] ${data.statusCode} $url');
-      debugPrint(
-        '[HTTP] body: ${data.body.length > 300 ? '${data.body.substring(0, 300)}...' : data.body}',
-      );
       if (data.statusCode == 200 || data.statusCode == 201) {
         return convert.jsonDecode(data.body);
       } else if (data.statusCode == 400 || data.statusCode == 404) {
@@ -91,13 +88,11 @@ class HttpServices extends Services {
       var responseBody = await streamedResponse.stream.bytesToString();
 
       debugPrint('Status: ${streamedResponse.statusCode}');
-      debugPrint('Response: $responseBody');
 
       if (streamedResponse.statusCode == 200 ||
           streamedResponse.statusCode == 201) {
         return convert.jsonDecode(responseBody);
       } else {
-        debugPrint('Error response: $responseBody');
         return ServiceError.unknownResponseError;
       }
     } on TimeoutException catch (_) {
