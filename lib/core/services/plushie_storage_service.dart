@@ -63,8 +63,17 @@ class PlushieStorageService extends Services {
     await _removeFromIndex(path);
   }
 
-  /// Clears visible gallery entries without deleting actual image files.
+  /// Clears visible gallery entries and deletes all actual image files.
   static Future<void> clearVisibleEntries() async {
+    final dir = await _getDir();
+    if (await dir.exists()) {
+      final entities = await dir.list().toList();
+      for (final entity in entities) {
+        if (entity is File && !_isIndexFile(entity)) {
+          await entity.delete();
+        }
+      }
+    }
     await _writeIndex([]);
   }
 
