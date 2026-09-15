@@ -293,6 +293,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           _CircleAction(
             color: AppColors.warmAmber,
             onTap: _saving ? null : _save,
+            tooltip: 'Save to gallery',
             child:
                 _saving
                     ? const SizedBox(
@@ -313,6 +314,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           _CircleAction(
             color: const Color(0xFF25D366),
             onTap: _sharing ? null : _shareToWhatsApp,
+            tooltip: 'Share to WhatsApp',
             child: const Text(
               'WA',
               style: TextStyle(
@@ -360,32 +362,37 @@ class _CircleAction extends StatelessWidget {
   final Color color;
   final VoidCallback? onTap;
   final Widget child;
+  final String tooltip;
 
   const _CircleAction({
     required this.color,
     required this.onTap,
     required this.child,
+    required this.tooltip,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: onTap == null ? color.withValues(alpha: 0.5) : color,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.35),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
+    return Tooltip(
+      message: tooltip,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: onTap == null ? color.withValues(alpha: 0.5) : color,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.35),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Center(child: child),
         ),
-        child: Center(child: child),
       ),
     );
   }
