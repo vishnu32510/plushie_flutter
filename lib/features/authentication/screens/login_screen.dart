@@ -145,11 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 decoration: _inputDecoration('Email', Icons.email_outlined),
-                validator: (v) => (v == null || !v.contains('@'))
-                    ? 'Enter a valid email'
-                    : null,
-                onChanged: (v) =>
-                    context.read<LoginBloc>().add(LoginEmailChanged(v)),
+                validator:
+                    (v) =>
+                        (v == null || !v.contains('@'))
+                            ? 'Enter a valid email'
+                            : null,
+                onChanged:
+                    (v) => context.read<LoginBloc>().add(LoginEmailChanged(v)),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -167,24 +169,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.warmBrownLight,
                       size: 20,
                     ),
-                    onPressed: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
+                    onPressed:
+                        () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                   ),
                 ),
-                validator: (v) => (v == null || v.length < 6)
-                    ? 'Password must be at least 6 characters'
-                    : null,
-                onChanged: (v) =>
-                    context.read<LoginBloc>().add(LoginPasswordChanged(v)),
+                validator:
+                    (v) =>
+                        (v == null || v.length < 6)
+                            ? 'Password must be at least 6 characters'
+                            : null,
+                onChanged:
+                    (v) =>
+                        context.read<LoginBloc>().add(LoginPasswordChanged(v)),
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton(
-                  onPressed: isLoading
-                      ? null
-                      : () => _handleEmailContinue(context),
+                  onPressed:
+                      isLoading ? null : () => _handleEmailContinue(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.warmBrown,
                     foregroundColor: Colors.white,
@@ -196,22 +202,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
+                  child:
+                      isLoading
+                          ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                          : const Text(
+                            'Continue with Email',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        )
-                      : const Text(
-                          'Continue with Email',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
                 ),
               ),
             ],
