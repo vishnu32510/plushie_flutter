@@ -71,11 +71,14 @@ class PlushieStorageService extends Services {
     final dir = await _getDir();
     if (await dir.exists()) {
       final entities = await dir.list().toList();
+      final deleteFutures = <Future>[];
       for (final entity in entities) {
         if (entity is File && !_isIndexFile(entity)) {
-          await entity.delete();
+          deleteFutures.add(entity.delete());
         }
       }
+      // ⚡ Bolt: Use Future.wait() for concurrent I/O operations to significantly speed up file deletion compared to sequential await in a loop.
+      await Future.wait(deleteFutures);
     }
     await _writeIndex([]);
   }
