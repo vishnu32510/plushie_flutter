@@ -42,11 +42,14 @@ class PlushieStorageService extends Services {
 
     final files = <File>[];
     final cleanedPaths = <String>[];
-    for (final path in index) {
-      final file = File(path);
-      if (await file.exists()) {
-        files.add(file);
-        cleanedPaths.add(path);
+    final existsResults = await Future.wait(
+      index.map((path) => File(path).exists()),
+    );
+
+    for (int i = 0; i < index.length; i++) {
+      if (existsResults[i]) {
+        files.add(File(index[i]));
+        cleanedPaths.add(index[i]);
       }
     }
 
