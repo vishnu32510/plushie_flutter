@@ -8,3 +8,6 @@
 ## 2026-09-15 - Add Tooltips to Custom Icon Buttons
 **Learning:** Found an icon-only `GestureDetector` acting as a close button on the `LoginScreen` without a tooltip, which means it lacked screen reader context and hover feedback.
 **Action:** Always wrap custom icon-only gesture detectors (like close buttons) in `Tooltip` widgets to ensure accessibility and better desktop/web UX.
+## 2024-10-25 - Improve Clarity of Image Upload Options
+**Learning:** Having a large "Upload photo" button that opens a secondary sheet to choose between Gallery and Camera, while a secondary "Camera" button exists next to it, is redundant and increases cognitive load.
+**Action:** When offering multiple distinct actions on a primary screen (e.g., choosing an image vs taking a photo), map primary buttons directly to specific actions instead of introducing intermediary selection dialogs when an alternative option is already presented visibly on the screen.
