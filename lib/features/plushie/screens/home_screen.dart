@@ -42,13 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.75,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        expand: false,
-        builder: (_, controller) => const PlushieGallery(),
-      ),
+      builder:
+          (_) => DraggableScrollableSheet(
+            initialChildSize: 0.75,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (_, controller) => const PlushieGallery(),
+          ),
     );
   }
 
@@ -103,52 +104,53 @@ class _HomeScreenState extends State<HomeScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.subtleGray,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+      builder:
+          (ctx) => SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.subtleGray,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Choose your photo',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.warmBrown,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _SourceOption(
+                    icon: Icons.camera_alt_rounded,
+                    label: 'Take a photo',
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _pickImage(ImageSource.camera);
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _SourceOption(
+                    icon: Icons.photo_library_rounded,
+                    label: 'Choose from gallery',
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _pickImage(ImageSource.gallery);
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Choose your photo',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.warmBrown,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _SourceOption(
-                icon: Icons.camera_alt_rounded,
-                label: 'Take a photo',
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _pickImage(ImageSource.camera);
-                },
-              ),
-              const SizedBox(height: 12),
-              _SourceOption(
-                icon: Icons.photo_library_rounded,
-                label: 'Choose from gallery',
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _pickImage(ImageSource.gallery);
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -198,14 +200,15 @@ class _HomeScreenState extends State<HomeScreen> {
           showDialog(
             context: context,
             barrierColor: Colors.black.withValues(alpha: 0.6),
-            builder: (_) => PlushieResultCard(
-              resultBytes: state.resultBytes,
-              originalBytes: state.originalImageBytes,
-              onCreateAnother: () {
-                context.read<PlushieBloc>().add(const ResetPlushieEvent());
-                setState(() => _selectedImage = null);
-              },
-            ),
+            builder:
+                (_) => PlushieResultCard(
+                  resultBytes: state.resultBytes,
+                  originalBytes: state.originalImageBytes,
+                  onCreateAnother: () {
+                    context.read<PlushieBloc>().add(const ResetPlushieEvent());
+                    setState(() => _selectedImage = null);
+                  },
+                ),
           );
         } else if (state is PlushieError) {
           getIt<IToastService>().showError(state.message);
@@ -549,12 +552,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     : 'Choose a photo to get started...',
                 style: TextStyle(
                   fontSize: 14,
-                  color: _selectedImage != null
-                      ? AppColors.warmBrown
-                      : AppColors.warmBrownLight,
-                  fontWeight: _selectedImage != null
-                      ? FontWeight.w600
-                      : FontWeight.w400,
+                  color:
+                      _selectedImage != null
+                          ? AppColors.warmBrown
+                          : AppColors.warmBrownLight,
+                  fontWeight:
+                      _selectedImage != null
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                 ),
                 maxLines: 2,
               ),
@@ -564,23 +569,24 @@ class _HomeScreenState extends State<HomeScreen> {
           Tooltip(
             message: _selectedImage != null ? 'Create Plushie' : 'Upload Image',
             child: GestureDetector(
-              onTap: _selectedImage != null
-                  ? _transform
-                  : _showImageSourceSheet,
+              onTap:
+                  _selectedImage != null ? _transform : _showImageSourceSheet,
               child: Container(
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: _selectedImage != null
-                      ? AppColors.warmBrown
-                      : AppColors.subtleGray,
+                  color:
+                      _selectedImage != null
+                          ? AppColors.warmBrown
+                          : AppColors.subtleGray,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.arrow_upward_rounded,
-                  color: _selectedImage != null
-                      ? Colors.white
-                      : AppColors.warmBrownLight,
+                  color:
+                      _selectedImage != null
+                          ? Colors.white
+                          : AppColors.warmBrownLight,
                   size: 22,
                 ),
               ),
@@ -753,16 +759,17 @@ class _PlushieLoadingOverlayState extends State<_PlushieLoadingOverlay>
               const SizedBox(height: 24),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 400),
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.2),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
-                  ),
-                ),
+                transitionBuilder:
+                    (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, 0.2),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    ),
                 child: Column(
                   key: ValueKey(_messageIndex),
                   children: [
@@ -795,9 +802,10 @@ class _PlushieLoadingOverlayState extends State<_PlushieLoadingOverlay>
 class _PawPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFFD4A047).withValues(alpha: 0.06)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..color = const Color(0xFFD4A047).withValues(alpha: 0.06)
+          ..style = PaintingStyle.fill;
 
     void drawPaw(double x, double y, double scale) {
       // Main pad
