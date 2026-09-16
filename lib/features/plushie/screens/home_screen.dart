@@ -234,7 +234,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBackground() {
-    return Positioned.fill(child: CustomPaint(painter: _PawPatternPainter()));
+    return Positioned.fill(
+      // ⚡ Bolt: Wrap static background in RepaintBoundary to prevent expensive
+      // repainting of multiple paths/ovals during sibling animations (e.g. loading overlay).
+      child: RepaintBoundary(
+        child: CustomPaint(painter: _PawPatternPainter()),
+      ),
+    );
   }
 
   Widget _buildContent(PlushieState state) {
