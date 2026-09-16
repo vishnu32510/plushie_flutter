@@ -237,9 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Positioned.fill(
       // ⚡ Bolt: Wrap static background in RepaintBoundary to prevent expensive
       // repainting of multiple paths/ovals during sibling animations (e.g. loading overlay).
-      child: RepaintBoundary(
-        child: CustomPaint(painter: _PawPatternPainter()),
-      ),
+      child: RepaintBoundary(child: CustomPaint(painter: _PawPatternPainter())),
     );
   }
 
