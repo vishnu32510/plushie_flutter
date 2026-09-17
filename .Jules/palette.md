@@ -12,3 +12,6 @@
 **Learning:** Having a large "Upload photo" button that opens a secondary sheet to choose between Gallery and Camera, while a secondary "Camera" button exists next to it, is redundant and increases cognitive load.
 **Action:** When offering multiple distinct actions on a primary screen (e.g., choosing an image vs taking a photo), map primary buttons directly to specific actions instead of introducing intermediary selection dialogs when an alternative option is already presented visibly on the screen.
 ## 2026-09-17 - [Feature Discoverability] \n**Learning:** [Hidden interactions (like long-press to compare) need clear visual indicators or hints for users to discover them.] \n**Action:** [Always pair hidden gesture interactions with explicit visual cues or hint texts, especially when they represent a core feature of the UI.]
+## 2024-11-20 - Adding CTA to Empty States
+**Learning:** In Flutter, empty states (like lists or grids with no data) often leave users feeling stuck if they only provide explanatory text.
+**Action:** Always include a helpful Call-to-Action (CTA) button in empty state widgets (e.g., an `ElevatedButton` for "Start Creating" that navigates the user back to the primary flow).
