@@ -157,99 +157,124 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
   Widget _buildImageSection() {
     final Widget image;
     if (_showingOriginal) {
-      image =
-          widget.originalBytes != null
-              ? Image.memory(widget.originalBytes!, fit: BoxFit.cover)
-              : const Center(child: Text('No original'));
+      image = widget.originalBytes != null
+          ? Image.memory(widget.originalBytes!, fit: BoxFit.cover)
+          : const Center(child: Text('No original'));
     } else {
-      image =
-          widget.resultBytes != null
-              ? Image.memory(widget.resultBytes!, fit: BoxFit.cover)
-              : const Center(child: Text('No image'));
+      image = widget.resultBytes != null
+          ? Image.memory(widget.resultBytes!, fit: BoxFit.cover)
+          : const Center(child: Text('No image'));
     }
 
     final hasOriginal = widget.originalBytes != null;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onLongPressStart:
-            hasOriginal ? (_) => setState(() => _showingOriginal = true) : null,
-        onLongPressEnd:
-            hasOriginal
+      child: Column(
+        children: [
+          GestureDetector(
+            onLongPressStart: hasOriginal
+                ? (_) => setState(() => _showingOriginal = true)
+                : null,
+            onLongPressEnd: hasOriginal
                 ? (_) => setState(() => _showingOriginal = false)
                 : null,
-        child: Stack(
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: Container(
-                key: ValueKey(_showingOriginal),
-                height: 460,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.warmAmber.withValues(alpha: 0.4),
-                    width: 1.5,
+            child: Stack(
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    key: ValueKey(_showingOriginal),
+                    height: 460,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColors.warmAmber.withValues(alpha: 0.4),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.5),
+                      child: image,
+                    ),
                   ),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14.5),
-                  child: image,
-                ),
-              ),
-            ),
-            // Shine overlay
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14.5),
-                child: IgnorePointer(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.15),
-                          Colors.transparent,
-                          Colors.transparent,
-                          Colors.white.withValues(alpha: 0.06),
-                        ],
-                        stops: const [0.0, 0.35, 0.65, 1.0],
+                // Shine overlay
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14.5),
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.15),
+                              Colors.transparent,
+                              Colors.transparent,
+                              Colors.white.withValues(alpha: 0.06),
+                            ],
+                            stops: const [0.0, 0.35, 0.65, 1.0],
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            if (_showingOriginal)
-              Positioned(
-                bottom: 8,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Original',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                if (_showingOriginal)
+                  Positioned(
+                    bottom: 8,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text(
+                          'Original',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+              ],
+            ),
+          ),
+          if (hasOriginal)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.touch_app_rounded,
+                    size: 14,
+                    color: AppColors.warmBrownLight,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Press and hold to compare',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.warmBrownLight,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -262,17 +287,16 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: _sharing ? null : _share,
-              icon:
-                  _sharing
-                      ? const SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                      : const Icon(Icons.share_rounded, size: 16),
+              icon: _sharing
+                  ? const SizedBox(
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Icon(Icons.share_rounded, size: 16),
               label: const Text('Share'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.warmBrown,
@@ -294,21 +318,20 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
             color: AppColors.warmAmber,
             onTap: _saving ? null : _save,
             tooltip: 'Save to gallery',
-            child:
-                _saving
-                    ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                    : const Icon(
-                      Icons.download_rounded,
+            child: _saving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
                       color: Colors.white,
-                      size: 20,
+                      strokeWidth: 2,
                     ),
+                  )
+                : const Icon(
+                    Icons.download_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
           ),
           const SizedBox(width: 10),
           _CircleAction(
