@@ -42,12 +42,13 @@ class _PlushieGalleryState extends State<PlushieGallery> {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.6),
-      builder: (_) => PlushieResultCard(
-        resultBytes: bytes,
-        originalBytes: null,
-        autoSave: false,
-        onCreateAnother: () => Navigator.of(context).pop(),
-      ),
+      builder:
+          (_) => PlushieResultCard(
+            resultBytes: bytes,
+            originalBytes: null,
+            autoSave: false,
+            onCreateAnother: () => Navigator.of(context).pop(),
+          ),
     );
   }
 
@@ -229,43 +230,44 @@ class _PlushieThumbnail extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(
-                Icons.delete_outline_rounded,
-                color: Color(0xFFB85C4A),
-              ),
-              title: const Text(
-                'Delete plushie',
-                style: TextStyle(
-                  color: Color(0xFFB85C4A),
-                  fontWeight: FontWeight.w600,
+      builder:
+          (_) => SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: Color(0xFFB85C4A),
+                  ),
+                  title: const Text(
+                    'Delete plushie',
+                    style: TextStyle(
+                      color: Color(0xFFB85C4A),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    onDelete();
+                  },
                 ),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                onDelete();
-              },
+                ListTile(
+                  leading: Icon(
+                    Icons.close_rounded,
+                    color: AppColors.warmBrownLight,
+                  ),
+                  title: Text(
+                    'Cancel',
+                    style: TextStyle(color: AppColors.warmBrownLight),
+                  ),
+                  onTap: () => Navigator.pop(context),
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
-            ListTile(
-              leading: Icon(
-                Icons.close_rounded,
-                color: AppColors.warmBrownLight,
-              ),
-              title: Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.warmBrownLight),
-              ),
-              onTap: () => Navigator.pop(context),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }
