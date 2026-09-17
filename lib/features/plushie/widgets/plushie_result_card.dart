@@ -157,13 +157,15 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
   Widget _buildImageSection() {
     final Widget image;
     if (_showingOriginal) {
-      image = widget.originalBytes != null
-          ? Image.memory(widget.originalBytes!, fit: BoxFit.cover)
-          : const Center(child: Text('No original'));
+      image =
+          widget.originalBytes != null
+              ? Image.memory(widget.originalBytes!, fit: BoxFit.cover)
+              : const Center(child: Text('No original'));
     } else {
-      image = widget.resultBytes != null
-          ? Image.memory(widget.resultBytes!, fit: BoxFit.cover)
-          : const Center(child: Text('No image'));
+      image =
+          widget.resultBytes != null
+              ? Image.memory(widget.resultBytes!, fit: BoxFit.cover)
+              : const Center(child: Text('No image'));
     }
 
     final hasOriginal = widget.originalBytes != null;
@@ -172,12 +174,14 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
       child: Column(
         children: [
           GestureDetector(
-            onLongPressStart: hasOriginal
-                ? (_) => setState(() => _showingOriginal = true)
-                : null,
-            onLongPressEnd: hasOriginal
-                ? (_) => setState(() => _showingOriginal = false)
-                : null,
+            onLongPressStart:
+                hasOriginal
+                    ? (_) => setState(() => _showingOriginal = true)
+                    : null,
+            onLongPressEnd:
+                hasOriginal
+                    ? (_) => setState(() => _showingOriginal = false)
+                    : null,
             child: Stack(
               children: [
                 AnimatedSwitcher(
@@ -287,16 +291,17 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: _sharing ? null : _share,
-              icon: _sharing
-                  ? const SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Icon(Icons.share_rounded, size: 16),
+              icon:
+                  _sharing
+                      ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                      : const Icon(Icons.share_rounded, size: 16),
               label: const Text('Share'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.warmBrown,
@@ -318,20 +323,21 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
             color: AppColors.warmAmber,
             onTap: _saving ? null : _save,
             tooltip: 'Save to gallery',
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
+            child:
+                _saving
+                    ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : const Icon(
+                      Icons.download_rounded,
                       color: Colors.white,
-                      strokeWidth: 2,
+                      size: 20,
                     ),
-                  )
-                : const Icon(
-                    Icons.download_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
           ),
           const SizedBox(width: 10),
           _CircleAction(
