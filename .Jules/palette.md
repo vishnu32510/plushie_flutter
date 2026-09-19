@@ -15,3 +15,7 @@
 ## 2024-11-20 - Adding CTA to Empty States
 **Learning:** In Flutter, empty states (like lists or grids with no data) often leave users feeling stuck if they only provide explanatory text.
 **Action:** Always include a helpful Call-to-Action (CTA) button in empty state widgets (e.g., an `ElevatedButton` for "Start Creating" that navigates the user back to the primary flow).
+
+## 2023-09-19 - Actionable Bottom Bar Prompts
+**Learning:** Text prompts that describe an action (e.g., "Create a plushie from this photo") should be tappable if they act as a visual CTA, especially when paired with a small icon button. Making the text inactive forces users to hit a small target, causing friction. Also, text should not make unnecessary assumptions about user input ("...of me..." when it could be any photo).
+**Action:** When updating descriptive text that implies an action next to an icon button, ensure the `GestureDetector` on the text triggers the same primary action instead of being inactive, broadening the hit area and improving interaction clarity.
