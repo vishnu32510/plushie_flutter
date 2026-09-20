@@ -72,36 +72,51 @@ class _PlushieGalleryState extends State<PlushieGallery> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Your Plushies',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.warmBrown,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (!_loading)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.warmAmber.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_files.length}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.warmAmber,
+                Row(
+                  children: [
+                    const Text(
+                      'Your Plushies',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.warmBrown,
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    if (!_loading)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.warmAmber.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${_files.length}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.warmAmber,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                if (!_loading && _files.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    'Tap to view, long-press to delete',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.warmBrownLight,
+                    ),
                   ),
+                ],
               ],
             ),
           ),

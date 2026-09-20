@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Tooltip(
-              message: 'Open Gallery',
+              message: 'Your Plushies',
               child: GestureDetector(
                 onTap: _openGallery,
                 child: Container(
@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: AppColors.subtleGray, width: 1.5),
                   ),
                   child: const Icon(
-                    Icons.photo_library_rounded,
+                    Icons.grid_view_rounded,
                     color: AppColors.warmBrown,
                     size: 20,
                   ),
