@@ -19,3 +19,6 @@
 ## 2023-09-19 - Actionable Bottom Bar Prompts
 **Learning:** Text prompts that describe an action (e.g., "Create a plushie from this photo") should be tappable if they act as a visual CTA, especially when paired with a small icon button. Making the text inactive forces users to hit a small target, causing friction. Also, text should not make unnecessary assumptions about user input ("...of me..." when it could be any photo).
 **Action:** When updating descriptive text that implies an action next to an icon button, ensure the `GestureDetector` on the text triggers the same primary action instead of being inactive, broadening the hit area and improving interaction clarity.
+## 2024-09-20 - Action Clarification & Delete Discoverability
+**Learning:** Hidden long-press interactions without supporting UI text lead to poor feature discoverability (e.g. deleting a gallery item). Using identical generic icons and tooltips for distinct actions (like local gallery picker vs in-app saved items gallery) causes user confusion.
+**Action:** Provide explicit text hints (e.g. "long-press to delete") for advanced gestures, and disambiguate tooltips and iconography for distinct features.
