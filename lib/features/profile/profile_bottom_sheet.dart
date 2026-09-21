@@ -176,8 +176,8 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
         (dialogContext) => AlertDialog(
           title: const Text('Delete account?'),
           content: const Text(
-            'This will permanently delete your account from Firebase. '
-            'Your in-app plushie list will be cleared on this device, but image files are not deleted from Photos.',
+            'This will permanently delete your account. '
+            'Your in-app plushie list will be cleared on this device, but saved images will remain in your Photos.',
           ),
           actions: [
             TextButton(
@@ -186,7 +186,10 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text('Delete'),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFFB85C4A),
+              ),
+              child: const Text('Delete Account'),
             ),
           ],
         ),
@@ -213,7 +216,7 @@ Future<void> _handleDeleteAccount(BuildContext context) async {
   try {
     await context.read<FirebaseAuthenticationRepository>().deleteAccount();
     await PlushieStorageService.clearVisibleEntries();
-    message = 'Account deleted. Local gallery list cleared.';
+    message = 'Account deleted and gallery cleared.';
     success = true;
   } on DeleteAccountFailure catch (e) {
     message = e.message;

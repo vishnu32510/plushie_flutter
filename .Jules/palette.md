@@ -22,3 +22,6 @@
 ## 2024-09-20 - Action Clarification & Delete Discoverability
 **Learning:** Hidden long-press interactions without supporting UI text lead to poor feature discoverability (e.g. deleting a gallery item). Using identical generic icons and tooltips for distinct actions (like local gallery picker vs in-app saved items gallery) causes user confusion.
 **Action:** Provide explicit text hints (e.g. "long-press to delete") for advanced gestures, and disambiguate tooltips and iconography for distinct features.
+## 2024-11-20 - Remove technical jargon from UX copy
+**Learning:** Developers often unintentionally expose backend system names (like "Firebase") or internal technical logic ("Local gallery list cleared") in user-facing dialogs and messages, reducing content clarity and confusing users.
+**Action:** When reviewing user copy, always ensure the language is accessible to a non-technical audience. Remove references to backend platforms and use plain, descriptive language focused on user value and state.
