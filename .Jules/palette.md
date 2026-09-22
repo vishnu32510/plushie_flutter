@@ -25,3 +25,6 @@
 ## 2024-11-20 - Remove technical jargon from UX copy
 **Learning:** Developers often unintentionally expose backend system names (like "Firebase") or internal technical logic ("Local gallery list cleared") in user-facing dialogs and messages, reducing content clarity and confusing users.
 **Action:** When reviewing user copy, always ensure the language is accessible to a non-technical audience. Remove references to backend platforms and use plain, descriptive language focused on user value and state.
+## 2023-10-24 - Improve Bottom Bar Tap Targets
+**Learning:** Wrapping complex interactive UI rows with multiple tap targets in a single encompassing `GestureDetector` (using `HitTestBehavior.opaque`) significantly improves user experience by ensuring the entire area is tappable (respecting Fitts's Law).
+**Action:** Always identify UI components that act as a single logical action (e.g. "Upload" or "Generate" bars) and merge disparate gesture handlers into a single top-level handler to remove unclickable padding/gaps.
