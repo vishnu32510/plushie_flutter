@@ -491,113 +491,92 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomBar(PlushieState state) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardSurface,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppColors.subtleGray, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          if (_selectedImage != null)
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.subtleGray, width: 1.5),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                // Decode at lower resolution to save memory for bottom bar preview
-                child: Image.file(
-                  _selectedImage!,
-                  fit: BoxFit.cover,
-                  cacheWidth: 150,
-                ),
-              ),
-            )
-          else
-            Tooltip(
-              message: 'Choose Image',
-              child: GestureDetector(
-                onTap: _showImageSourceSheet,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.warmCream,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.subtleGray, width: 1.5),
-                  ),
-                  child: Icon(
-                    Icons.image_rounded,
-                    color: AppColors.warmBrownLight,
-                    size: 24,
-                  ),
-                ),
-              ),
+    final isReady = _selectedImage != null;
+    return GestureDetector(
+      onTap: isReady ? _transform : _showImageSourceSheet,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.cardSurface,
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: AppColors.subtleGray, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
             ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap:
-                  _selectedImage == null ? _showImageSourceSheet : _transform,
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            if (isReady)
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  // Decode at lower resolution to save memory for bottom bar preview
+                  child: Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                    cacheWidth: 150,
+                  ),
+                ),
+              )
+            else
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.warmCream,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.subtleGray, width: 1.5),
+                ),
+                child: Icon(
+                  Icons.image_rounded,
+                  color: AppColors.warmBrownLight,
+                  size: 24,
+                ),
+              ),
+            const SizedBox(width: 12),
+            Expanded(
               child: Text(
-                _selectedImage != null
+                isReady
                     ? 'Turn this photo into a plushie'
                     : 'Choose a photo to get started...',
                 style: TextStyle(
                   fontSize: 14,
                   color:
-                      _selectedImage != null
-                          ? AppColors.warmBrown
-                          : AppColors.warmBrownLight,
-                  fontWeight:
-                      _selectedImage != null
-                          ? FontWeight.w600
-                          : FontWeight.w400,
+                      isReady ? AppColors.warmBrown : AppColors.warmBrownLight,
+                  fontWeight: isReady ? FontWeight.w600 : FontWeight.w400,
                 ),
                 maxLines: 2,
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Tooltip(
-            message: _selectedImage != null ? 'Create Plushie' : 'Upload Image',
-            child: GestureDetector(
-              onTap:
-                  _selectedImage != null ? _transform : _showImageSourceSheet,
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color:
-                      _selectedImage != null
-                          ? AppColors.warmBrown
-                          : AppColors.subtleGray,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.arrow_upward_rounded,
-                  color:
-                      _selectedImage != null
-                          ? Colors.white
-                          : AppColors.warmBrownLight,
-                  size: 22,
-                ),
+            const SizedBox(width: 12),
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: isReady ? AppColors.warmBrown : AppColors.subtleGray,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                isReady
+                    ? Icons.auto_awesome_rounded
+                    : Icons.arrow_upward_rounded,
+                color: isReady ? Colors.white : AppColors.warmBrownLight,
+                size: 22,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
