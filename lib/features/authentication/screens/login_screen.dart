@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         const Text(
-          'Plushify Me',
+          'Plushie Yourself',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w800,

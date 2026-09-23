@@ -1,5 +1,5 @@
 abstract class AppConstants {
-  static const String appTitle = 'Plushify Me';
+  static const String appTitle = 'Plushie Yourself';
 
   // OpenAI endpoints
   static const String openAiResponsesUrl =

@@ -34,7 +34,7 @@ class PlushieApp extends StatelessWidget {
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, themeState) {
             return MaterialApp(
-              title: 'Plushify Me',
+              title: 'Plushie Yourself',
               debugShowCheckedModeBanner: false,
               theme: themeState.themeData,
               themeMode: themeState.themeMode,

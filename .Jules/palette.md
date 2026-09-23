@@ -28,3 +28,6 @@
 ## 2023-10-24 - Improve Bottom Bar Tap Targets
 **Learning:** Wrapping complex interactive UI rows with multiple tap targets in a single encompassing `GestureDetector` (using `HitTestBehavior.opaque`) significantly improves user experience by ensuring the entire area is tappable (respecting Fitts's Law).
 **Action:** Always identify UI components that act as a single logical action (e.g. "Upload" or "Generate" bars) and merge disparate gesture handlers into a single top-level handler to remove unclickable padding/gaps.
+## 2024-05-30 - Consistent Application Naming
+**Learning:** Inconsistent application naming across different screens (e.g., using "Plushify Me" in auth/profile but "Plushie Yourself" in README and main app configuration) causes confusion and dilutes brand identity.
+**Action:** Ensure the core product name is consistent across all user-facing strings (e.g., login screens, profile bottom sheets, share texts, and result cards) to maintain a cohesive user experience.

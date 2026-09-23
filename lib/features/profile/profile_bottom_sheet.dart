@@ -60,7 +60,7 @@ class ProfileBottomSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Plushify Me',
+                        'Plushie Yourself',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,

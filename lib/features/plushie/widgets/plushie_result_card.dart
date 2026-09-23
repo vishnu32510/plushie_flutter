@@ -58,7 +58,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
     setState(() => _sharing = true);
     final error = await MediaService.shareImage(
       bytes,
-      text: '🧸 Check out my plushie! Made with Plushify Me',
+      text: '🧸 Check out my plushie! Made with Plushie Yourself',
     );
     if (mounted) {
       if (error != null) getIt<IToastService>().showError(error);
@@ -141,7 +141,7 @@ class _PlushieResultCardState extends State<PlushieResultCard> {
           const Text('✨', style: TextStyle(fontSize: 16)),
           const SizedBox(width: 8),
           const Text(
-            'PLUSHIFY ME',
+            'PLUSHIE YOURSELF',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w900,
