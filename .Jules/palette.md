@@ -28,3 +28,6 @@
 ## 2023-10-24 - Improve Bottom Bar Tap Targets
 **Learning:** Wrapping complex interactive UI rows with multiple tap targets in a single encompassing `GestureDetector` (using `HitTestBehavior.opaque`) significantly improves user experience by ensuring the entire area is tappable (respecting Fitts's Law).
 **Action:** Always identify UI components that act as a single logical action (e.g. "Upload" or "Generate" bars) and merge disparate gesture handlers into a single top-level handler to remove unclickable padding/gaps.
+## 2024-05-24 - Empty State Clarity
+**Learning:** Empty states should not just say what to do (e.g. "Generate your first plushie"), but also *how* to do it (e.g. "Pick a photo to generate your first plushie"), especially if the action happens elsewhere in the UI.
+**Action:** When reviewing empty states, ensure the text acts as a clear guide for the user's immediate next step in the app flow.

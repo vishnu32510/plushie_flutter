@@ -150,7 +150,7 @@ class _PlushieGalleryState extends State<PlushieGallery> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Generate your first plushie!',
+              'Pick a photo to generate your first plushie!',
               style: TextStyle(fontSize: 14, color: AppColors.warmBrownLight),
             ),
             const SizedBox(height: 24),
