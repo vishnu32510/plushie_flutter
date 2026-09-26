@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Plushie',
+                'Plushify',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w800,
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Text(
-                'Yourself',
+                'Me',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w800,
