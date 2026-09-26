@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Plushify',
+                'Plushie',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w800,
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Text(
-                'Me',
+                'Yourself',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w800,
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Turn yourself into an adorable handcrafted plush toy.',
+                'Turn any photo into an adorable handcrafted plush toy.',
                 style: TextStyle(
                   fontSize: 15,
                   color: AppColors.warmBrownLight,

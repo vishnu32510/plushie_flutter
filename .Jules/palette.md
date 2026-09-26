@@ -28,3 +28,6 @@
 ## 2023-10-24 - Improve Bottom Bar Tap Targets
 **Learning:** Wrapping complex interactive UI rows with multiple tap targets in a single encompassing `GestureDetector` (using `HitTestBehavior.opaque`) significantly improves user experience by ensuring the entire area is tappable (respecting Fitts's Law).
 **Action:** Always identify UI components that act as a single logical action (e.g. "Upload" or "Generate" bars) and merge disparate gesture handlers into a single top-level handler to remove unclickable padding/gaps.
+## 2024-06-25 - Accurate Product Capabilities in Copy
+**Learning:** Copywriting that artificially limits the scope of a product (e.g., saying "Turn yourself into..." when the product can handle any photo) creates a mismatch between user expectations and actual capabilities.
+**Action:** Review user-facing copy to ensure it accurately reflects the full range of supported inputs and features, particularly in the initial onboarding or main screens.
