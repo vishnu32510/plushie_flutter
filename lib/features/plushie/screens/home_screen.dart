@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 20),
                   _SourceOption(
                     icon: Icons.camera_alt_rounded,
-                    label: 'Take a photo',
+                    label: 'Take a new photo',
                     onTap: () {
                       Navigator.pop(ctx);
                       _pickImage(ImageSource.camera);
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 12),
                   _SourceOption(
                     icon: Icons.photo_library_rounded,
-                    label: 'Choose from gallery',
+                    label: 'Choose a photo',
                     onTap: () {
                       Navigator.pop(ctx);
                       _pickImage(ImageSource.gallery);
@@ -439,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Choose from gallery',
+                    'Choose a photo',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -474,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Take a photo',
+                    'Take a new photo',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
