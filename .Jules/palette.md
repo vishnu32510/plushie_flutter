@@ -28,3 +28,6 @@
 ## 2023-10-24 - Improve Bottom Bar Tap Targets
 **Learning:** Wrapping complex interactive UI rows with multiple tap targets in a single encompassing `GestureDetector` (using `HitTestBehavior.opaque`) significantly improves user experience by ensuring the entire area is tappable (respecting Fitts's Law).
 **Action:** Always identify UI components that act as a single logical action (e.g. "Upload" or "Generate" bars) and merge disparate gesture handlers into a single top-level handler to remove unclickable padding/gaps.
+## 2024-05-24 - Content Clarity: Accurate Product Capability
+**Learning:** The home screen copy "Turn yourself into an adorable handcrafted plush toy." incorrectly implied the app only works for selfies, limiting the user's perception of the product's actual capabilities (which can transform pets, objects, and any other photo).
+**Action:** When reviewing product copy, ensure that the language accurately reflects the full breadth of the product's capabilities to prevent artificial self-limitation by the user. "Turn any photo" is more accurate than "Turn yourself".

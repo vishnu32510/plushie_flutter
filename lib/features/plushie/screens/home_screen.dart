@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Turn yourself into an adorable handcrafted plush toy.',
+                'Turn any photo into an adorable handcrafted plush toy.',
                 style: TextStyle(
                   fontSize: 15,
                   color: AppColors.warmBrownLight,
